@@ -1520,7 +1520,8 @@ ${client ? '<p style="margin:0 0 14px;font-size:13px">Компания: <strong>
   <li>Миграционные юристы в штате и судебная практика по миграционным спорам с МВД</li>
   <li>Автоматизированная система учёта и сопровождения иностранного персонала</li>
 </ul>
-
+`;
+  const freeTable = `
 <h3 style="font-size:14px;font-weight:bold;margin:0 0 8px;color:#1A3A6B;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Включено в стоимость — за счёт Авагар Групп</h3>
 <table style="width:100%;border-collapse:collapse;margin:0 0 20px;font-size:13px">
   <thead><tr>
@@ -1537,9 +1538,9 @@ ${client ? '<p style="margin:0 0 14px;font-size:13px">Компания: <strong>
 </table>`;
 
   if(svc === 'vizovye' || svc === 'india'){
-    return buildKP_Vizovye(header, tbStyle, thStyle, svc, email);
+    return buildKP_Vizovye(header+freeTable, tbStyle, thStyle, svc, email);
   } else if(svc === 'korea'){
-    return buildKP_Korea(header, tbStyle, thStyle, email);
+    return buildKP_Korea(header+freeTable, tbStyle, thStyle, email);
   } else {
     return buildKP_Autstaffing(header, tbStyle, thStyle, email);
   }
