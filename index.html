@@ -766,13 +766,18 @@ table.dt strong{color:var(--ink)}
   <div style="max-width:860px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)">
     <div style="background:var(--primary);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:#fff">Коммерческое предложение — Авагар</div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button id="kp-copy-btn" onclick="copyKP()" style="background:#E8B84B;color:#0D1117;border:none;border-radius:6px;padding:8px 18px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;cursor:pointer">📋 Скопировать</button>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button id="kp-edit-btn" onclick="toggleKPEdit()" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px 14px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;cursor:pointer">✏️ Редактировать</button>
+        <button id="kp-copy-btn" onclick="copyKP()" style="background:#E8B84B;color:#0D1117;border:none;border-radius:6px;padding:8px 14px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;cursor:pointer">📋 Скопировать</button>
+        <button onclick="downloadPDF()" style="background:#2A7D4F;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;cursor:pointer">⬇️ Скачать PDF</button>
         <button onclick="closeKP()" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:20px;cursor:pointer">×</button>
       </div>
     </div>
-    <div style="padding:10px 24px;background:#EEF3FB;font-size:13px;color:var(--primary);border-bottom:1px solid var(--border)">
-      💡 Нажмите «Скопировать» → откройте Google Docs → Ctrl+V. Таблицы и форматирование сохранятся.
+    <div id="kp-hint-bar" style="padding:10px 24px;background:#EEF3FB;font-size:13px;color:var(--primary);border-bottom:1px solid var(--border)">
+      💡 Нажмите «Скопировать» → откройте Google Docs → Ctrl+V. Или скачайте PDF.
+    </div>
+    <div id="kp-edit-bar" style="display:none;padding:10px 24px;background:#FFF4E0;font-size:13px;color:#7B5000;border-bottom:1px solid var(--border)">
+      ✏️ Режим редактирования включён — кликните на любой текст и правьте. Изменения только в этом КП.
     </div>
     <div id="kp-content" style="padding:32px 40px;font-family:Arial,sans-serif;font-size:13px;line-height:1.7;color:#000"></div>
   </div>
@@ -1332,6 +1337,74 @@ function setVizMode(mode, pfx){
   calc();
 }
 
+// ===== КП: РЕДАКТИРОВАНИЕ И PDF =====
+let kpEditMode = false;
+
+function toggleKPEdit(){
+  kpEditMode = !kpEditMode;
+  const content = document.getElementById('kp-content');
+  const btn = document.getElementById('kp-edit-btn');
+  const bar = document.getElementById('kp-edit-bar');
+
+  if(kpEditMode){
+    // Делаем все текстовые элементы редактируемыми
+    content.querySelectorAll('p, li, td, th, h2, h3, h4, div:not([style*="display:flex"])').forEach(el => {
+      if(!el.children.length || el.tagName === 'TD' || el.tagName === 'TH'){
+        el.contentEditable = 'true';
+        el.style.outline = 'none';
+        el.addEventListener('focus', e => { e.target.style.background='rgba(232,184,75,.15)'; e.target.style.boxShadow='0 0 0 2px rgba(232,184,75,.4)'; });
+        el.addEventListener('blur',  e => { e.target.style.background=''; e.target.style.boxShadow=''; });
+      }
+    });
+    btn.innerHTML = '✅ Готово';
+    btn.style.background = 'rgba(42,125,79,.4)';
+    bar.style.display = 'block';
+  } else {
+    content.querySelectorAll('[contenteditable=true]').forEach(el => {
+      el.contentEditable = 'false';
+      el.style.background = '';
+      el.style.boxShadow = '';
+    });
+    btn.innerHTML = '✏️ Редактировать';
+    btn.style.background = 'rgba(255,255,255,.15)';
+    bar.style.display = 'none';
+  }
+}
+
+function downloadPDF(){
+  // Выключаем редактирование если включено
+  if(kpEditMode) toggleKPEdit();
+
+  const content = document.getElementById('kp-content');
+  const client = document.getElementById('kp-client').value.trim() || 'КП';
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>КП Авагар — ${client}</title>
+    <style>
+      @page { margin: 20mm 15mm; }
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #000; line-height: 1.6; }
+      table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+      td, th { border: 1px solid #ccc; padding: 6px 9px; }
+      th { background: #1A3A6B; color: #fff; }
+      h2 { font-size: 16px; color: #1A3A6B; }
+      h3 { font-size: 13px; color: #1A3A6B; border-bottom: 1px solid #1A3A6B; padding-bottom: 3px; }
+      ul { padding-left: 16px; }
+      li { margin: 3px 0; }
+      img { max-height: 50px; }
+      a { color: #1A3A6B; }
+      tr:nth-child(even) td { background: #f9f9f9; }
+    </style>
+  </head><body>${content.innerHTML}</body></html>`);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
+}
+
 // ===== КП ГЕНЕРАТОР =====
 function openKP(){
   calc();
@@ -1341,6 +1414,7 @@ function openKP(){
   document.body.style.overflow = 'hidden';
 }
 function closeKP(){
+  if(kpEditMode) toggleKPEdit();
   document.getElementById('kp-modal').style.display = 'none';
   document.body.style.overflow = '';
 }
@@ -1396,7 +1470,7 @@ function buildKP(){
   <div style="text-align:right;font-size:12px;color:#444;line-height:1.8">
     тел.: 8(804)700-29-77<br>
     ${email}<br>
-    avagargroup.ru<br>
+    <a href="https://avagar.ru" style="color:#1A3A6B">avagar.ru</a><br>
     СПб, Звенигородская 1/2, оф. 507
   </div>
 </div>
@@ -1553,7 +1627,7 @@ ${extraTable}
 <p style="margin:0;font-size:13px">Жильё и питание — организует заказчик. Авагар встречает сотрудников в аэропорту и довозит до места проживания.</p>
 
 <div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666">
-  <strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · info@avagar.ru
+  <strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · ${email} · avagar.ru
 </div>`;
 }
 
@@ -1593,7 +1667,7 @@ ${advTable}
 <h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Ежемесячные расходы</h3>
 ${monTable}
 <p style="margin:8px 0;padding:10px;background:#FFF5F5;border-left:4px solid #CC0000;font-size:12.5px">⚠ Проживание — только общежитие (бытовки недопустимы). Питание — на заказчике. Бригадир обязателен при любом количестве.</p>
-<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77</div>`;
+<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · ${email} · avagar.ru</div>`;
 }
 
 function buildKP_Autstaffing(header, tbStyle, thStyle){
@@ -1642,7 +1716,7 @@ function buildKP_Autstaffing(header, tbStyle, thStyle){
 ${monTable}
 ${razBlock}
 <p style="margin:8px 0;padding:10px;background:#EEF3FB;border-left:4px solid #1A3A6B;font-size:12.5px">Комиссия начисляется по фактически оформленным. Ставка для ${n} чел.: ${kpFmt(komissia)}/чел./мес.${regNeeded?' Миграционный учёт — только при наличии собственности заказчика, переданной Авагар по договору аренды.':''}</p>
-<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77</div>`;
+<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · ${email} · avagar.ru</div>`;
 }
 
 // ===== SUPABASE SYNC =====
