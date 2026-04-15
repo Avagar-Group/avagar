@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>АВАГАР — База знаний</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0D1117; --paper:#F7F5F0; --nav:#12243F;
+  --primary:#1A3A6B; --green:#2A7D4F; --amber:#B07B10; --accent:#D64A2A;
+  --border:#DDD8CE; --card:#FFFFFF; --muted:#6B7280;
+  --info-bg:#EEF3FB; --warn-bg:#FFF4E0; --succ-bg:#EDF7F1; --dang-bg:#FDF0EE; --ko-bg:#FFF5F5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Golos Text',sans-serif;background:var(--paper);color:var(--ink);display:flex;min-height:100vh;font-size:15px;line-height:1.65}
+.sidebar{width:256px;min-width:256px;background:var(--nav);color:#fff;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-logo{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-brand{font-family:'Unbounded',sans-serif;font-weight:900;font-size:20px;letter-spacing:-.5px}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+.sb-group{padding:12px 0 4px}
+.sb-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.3);padding:0 22px;margin-bottom:5px;font-weight:600}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 22px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.65);font-weight:500;border-left:3px solid transparent;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.sb-item.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:#E8B84B}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-foot{margin-top:auto;padding:14px 22px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:rgba(255,255,255,.22);line-height:1.6}
+.main{margin-left:256px;flex:1;padding:46px 54px 80px}
+.sec{display:none}.sec.active{display:block}
+.ph{margin-bottom:34px;padding-bottom:22px;border-bottom:2px solid var(--border)}
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:4px 11px;border-radius:2px;margin-bottom:11px}
+.b-bl{background:var(--primary);color:#fff}.b-gr{background:var(--green);color:#fff}
+.b-am{background:var(--amber);color:#fff}.b-ko{background:#CC0000;color:#fff}.b-dk{background:#374151;color:#fff}
+.pt{font-family:'Unbounded',sans-serif;font-size:27px;font-weight:700;color:var(--ink);line-height:1.2;letter-spacing:-.5px}
+.pd{margin-top:9px;color:var(--muted);font-size:14px;max-width:580px}
+h2{font-family:'Unbounded',sans-serif;font-size:14.5px;font-weight:700;color:var(--primary);margin:34px 0 13px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+h3{font-size:12.5px;font-weight:700;color:var(--ink);margin:20px 0 8px;text-transform:uppercase;letter-spacing:.8px}
+p{margin:8px 0;color:#2D3748;line-height:1.65}
+ul,ol{padding-left:21px;margin:9px 0}
+li{margin:5px 0;color:#2D3748}
+strong{color:var(--ink);font-weight:600}
+.note{border-radius:6px;padding:12px 16px;margin:13px 0;border-left:4px solid;font-size:13.5px;line-height:1.6}
+.ni{background:var(--info-bg);border-color:var(--primary);color:#1e3a6a}
+.nw{background:var(--warn-bg);border-color:var(--amber);color:#7B5000}
+.ns{background:var(--succ-bg);border-color:var(--green);color:#1A5C30}
+.nd{background:var(--dang-bg);border-color:var(--accent);color:#7B1A0A}
+.nk{background:var(--ko-bg);border-color:#CC0000;color:#8B0000}
+table.dt{width:100%;border-collapse:collapse;margin:13px 0;font-size:13.5px}
+table.dt th{background:var(--primary);color:#fff;padding:9px 13px;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+table.dt td{padding:9px 13px;border-bottom:1px solid var(--border);color:#2D3748;vertical-align:top}
+table.dt tr:nth-child(even) td{background:#FAFAF8}
+table.dt tr:last-child td{border-bottom:none}
+table.dt strong{color:var(--ink)}
+.price{font-weight:700;color:var(--primary);white-space:nowrap}
+.free{font-weight:700;color:var(--green)}
+.warn-val{font-weight:700;color:var(--amber)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:17px 19px;position:relative;overflow:hidden}
+.cs{position:absolute;top:0;left:0;width:4px;height:100%}
+.card h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;color:var(--ink)}
+.card p,.card li{font-size:13.5px}
+.hgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:22px 0}
+.hcard{border:1.5px solid var(--border);border-radius:10px;padding:20px 19px 16px;cursor:pointer;transition:all .18s;background:var(--card);position:relative;overflow:hidden}
+.hcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.hc1::after{background:var(--primary)}.hc2::after{background:#CC0000}.hc3::after{background:var(--green)}.hc4::after{background:var(--amber)}
+.hcard:hover{border-color:var(--primary);transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.07)}
+.hcard .icon{font-size:24px;margin-bottom:10px}
+.hcard .label{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.hcard .desc{font-size:12px;color:var(--muted);line-height:1.5}
+.divider{height:1px;background:var(--border);margin:26px 0}
+/* ROADMAP */
+.rm-tabs{display:flex;border-bottom:2px solid var(--border)}
+.rm-tab{padding:10px 22px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.rm-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.rm-tab.active.ko{color:#CC0000;border-bottom-color:#CC0000}
+.rm-content{display:none;padding-top:24px}.rm-content.active{display:block}
+.road{display:flex;flex-direction:column;position:relative}
+.road::before{content:'';position:absolute;left:19px;top:0;bottom:0;width:2px;background:var(--border);z-index:0}
+.rnode{display:flex;gap:14px;align-items:flex-start;position:relative;z-index:1}
+.rnum{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;flex-shrink:0;color:#fff}
+.rnum.bl{background:var(--primary)}.rnum.ko{background:#CC0000}.rnum.g{background:var(--green)}
+.rbody{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:13px 15px;margin-bottom:10px}
+.rbody.free{border-color:var(--green);background:var(--succ-bg)}
+.rbody.ko{border-color:#CC0000;background:var(--ko-bg)}
+.rbody.total{border-color:var(--primary);background:var(--info-bg)}
+.rtitle{font-weight:700;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+.rdesc{font-size:13px;color:#4B5563;line-height:1.6}
+.rmeta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.tag{font-size:11.5px;padding:3px 8px;border-radius:3px;font-weight:600}
+.tb{background:var(--info-bg);color:var(--primary)}
+.tg{background:var(--succ-bg);color:var(--green)}
+.tr{background:var(--dang-bg);color:var(--accent)}
+.tw{background:var(--warn-bg);color:var(--amber)}
+.tgr{background:#F3F4F6;color:#374151}
+.tk{background:var(--ko-bg);color:#CC0000}
+
+/* ===== TOPBAR (mobile only) ===== */
+.topbar{
+  display:none;position:sticky;top:0;z-index:90;
+  height:54px;background:var(--nav);
+  align-items:center;padding:0 14px;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.topbar-title{font-family:'Unbounded',sans-serif;font-weight:900;font-size:15px;color:#fff;letter-spacing:-.3px}
+.topbar-section{font-size:11px;color:rgba(255,255,255,.4);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.hamburger{background:none;border:none;cursor:pointer;padding:6px;color:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:6px}
+.hamburger:active{background:rgba(255,255,255,.1)}
+.ham-icon{display:flex;flex-direction:column;gap:5px;width:22px}
+.ham-icon span{display:block;height:2px;background:#fff;border-radius:2px;transition:all .25s}
+.hamburger.open .ham-icon span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open .ham-icon span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open .ham-icon span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ===== OVERLAY ===== */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:98;backdrop-filter:blur(2px)}
+.overlay.active{display:block}
+
+/* ===== MOBILE ===== */
+@media(max-width:800px){
+  body{flex-direction:column}
+  .topbar{display:flex}
+  .sidebar{transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);top:0;z-index:99;}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:20px 16px 60px;max-width:100vw;overflow-x:hidden}
+  .ph{margin-bottom:24px;padding-bottom:18px}
+  .pt{font-size:21px;letter-spacing:-.3px}
+  .pd{font-size:13px}
+  h2{font-size:13px;margin:26px 0 11px}
+  .hgrid{grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .hcard{padding:16px 14px 14px}
+  .hcard .icon{font-size:22px;margin-bottom:8px}
+  .hcard .label{font-size:11.5px}
+  .hcard .desc{font-size:11.5px}
+  .split{grid-template-columns:1fr}
+  table.dt{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;white-space:nowrap}
+  table.dt td,table.dt th{padding:8px 10px;font-size:13px;white-space:normal;min-width:80px}
+  table.dt td:first-child{min-width:140px;white-space:normal}
+  .road::before{left:16px}
+  .rnode{gap:10px}
+  .rnum{width:34px;height:34px;font-size:10px;flex-shrink:0}
+  .rbody{padding:10px 12px;margin-bottom:8px}
+  .rtitle{font-size:13px}
+  .rdesc{font-size:12.5px}
+  .rmeta{gap:6px;margin-top:7px}
+  .tag{font-size:11px;padding:2px 7px}
+  .rm-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .rm-tab{white-space:nowrap;padding:9px 13px;font-size:12px}
+  .note{font-size:13px;padding:10px 14px}
+  .card{padding:14px 15px}
+}
+@media(max-width:460px){
+  .hgrid{grid-template-columns:1fr}
+  .main{padding:16px 12px 60px}
+  .pt{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR (mobile) -->
+<div class="topbar" id="topbar">
+  <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Меню">
+    <div class="ham-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="topbar-title">АВАГАР</div>
+  <div class="topbar-section" id="topbar-section">База знаний</div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sb-logo"><div class="sb-brand">АВАГАР</div><div class="sb-sub">База знаний · Менеджер</div></div>
+  <div class="sb-group"><div class="sb-label">Обзор</div>
+    <div class="sb-item active" onclick="show('home')"><span class="dot" style="background:#E8B84B"></span>О компании</div>
+  </div>
+  <div class="sb-group"><div class="sb-label">Дорожные карты</div>
+    <div class="sb-item" onclick="show('road')"><span class="dot" style="background:#60A5FA"></span>Путь сотрудника</div>
+  </div>
+  <div class="sb-group"><div class="sb-label">Направления</div>
+    <div class="sb-item" onclick="show('vizovye')"><span class="dot" style="background:#4A90D9"></span>Визовый персонал</div>
+    <div class="sb-item" onclick="show('korea')"><span class="dot" style="background:#CC0000"></span>Северная Корея</div>
+    <div class="sb-item" onclick="show('autstaffing')"><span class="dot" style="background:#2A7D4F"></span>Вывод за штат</div>
+    <div class="sb-item" onclick="show('sudy')"><span class="dot" style="background:#C89B2A"></span>Нарушения и суды</div>
+  </div>
+  <div class="sb-group"><div class="sb-label">Справочник</div>
+    <div class="sb-item" onclick="show('kto')"><span class="dot" style="background:rgba(255,255,255,.3)"></span>Кто обращается</div>
+  </div>
+  <div class="sb-group"><div class="sb-label">Инструменты</div>
+    <div class="sb-item" onclick="show('calc')" style="background:rgba(232,184,75,.12);border-left-color:#E8B84B"><span class="dot" style="background:#E8B84B"></span>🧮 Калькулятор КП</div>
+  </div>
+  <div style="padding:10px 22px 4px">
+    <button id="edit-toggle" onclick="toggleEditMode()" style="width:100%;background:rgba(232,184,75,.12);border:1px solid rgba(232,184,75,.25);color:#E8B84B;border-radius:6px;padding:9px 12px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s">✏️ Режим редактирования</button>
+  </div>
+  <div style="padding:0 22px 10px;display:none" id="reset-edits-btn">
+    <button onclick="resetEdits()" style="width:100%;background:rgba(214,74,42,.1);border:1px solid rgba(214,74,42,.25);color:#D64A2A;border-radius:6px;padding:7px 12px;font-family:'Golos Text',sans-serif;font-size:11px;font-weight:600;cursor:pointer">↺ Сбросить все правки</button>
+  </div>
+  <div class="sb-foot">Авагар Групп · с 2009<br>Аккредитация № ЕПГУ-2801548798</div>
+</nav>
+
+<main class="main">
+
+<!-- HOME -->
+<div class="sec active" id="home">
+  <div class="ph"><div class="pt">Авагар Групп</div><div class="pd">Частное агентство занятости на рынке трудовой миграции с 2009 года.</div></div>
+  <div class="hgrid">
+    <div class="hcard hc1" onclick="show('vizovye')"><div class="icon">🌏</div><div class="label">Визовый персонал</div><div class="desc">Бангладеш, Индия. ~6 мес. Полное оформление.</div></div>
+    <div class="hcard hc2" onclick="show('korea')"><div class="icon">🇰🇵</div><div class="label">Северная Корея</div><div class="desc">Студ. виза. 1,5–3 мес. Особая схема.</div></div>
+    <div class="hcard hc3" onclick="show('autstaffing')"><div class="icon">📋</div><div class="label">Вывод за штат</div><div class="desc">Аутстаффинг безвизовых. Кадры + зарплата.</div></div>
+    <div class="hcard hc4" onclick="show('sudy')"><div class="icon">⚖️</div><div class="label">Нарушения и суды</div><div class="desc">Есть протокол — обжалуем, снижаем.</div></div>
+  </div>
+  <div class="divider"></div>
+  <h2>О компании</h2>
+  <p>С 2009 года работаем на рынке трудовой миграции. На начальном этапе — преимущественно с безвизовым персоналом, когда это было актуально и экономически обосновано. Сейчас работаем с безвизовыми в части вывода за штат (аутстаффинг), а с 2025 года добавили ещё одно направление — <strong>подбор и предоставление визового персонала</strong> плюс <strong>миграционное сопровождение</strong> по всем этапам оформления разрешительных документов на территории России.</p>
+  <p><strong>Лицензия частного агентства занятости</strong> (ЧАЗ) — даёт право осуществлять услуги подбора и предоставления персонала. <strong>Аккредитация № ЕПГУ-2801548798</strong>, действует до 25 марта 2029 года.</p>
+  <p><strong>Офис:</strong> Санкт-Петербург, ул. Звенигородская 1/2, БЦ Звенигородский, офис 507.</p>
+  <h2>Что мы делаем</h2>
+  <ul>
+    <li><strong>Подбор и предоставление визового иностранного персонала</strong> (Бангладеш, Индия) — полный цикл от квот до выхода на работу</li>
+    <li><strong>Миграционное сопровождение</strong> на территории России по всем этапам оформления разрешительных документов</li>
+    <li><strong>Вывод за штат (аутстаффинг)</strong> — ведём кадровое и миграционное сопровождение иностранцев, которые уже есть у клиента</li>
+    <li><strong>Северная Корея</strong> — отдельное направление, оформление через учебный центр</li>
+    <li><strong>Судебное сопровождение</strong> по миграционным нарушениям</li>
+  </ul>
+  <p><strong>Отрасли клиентов:</strong> строительство, производство, лёгкая промышленность (швейные, обувные фабрики), общепит, клининг.</p>
+</div>
+
+<!-- ROADMAP -->
+<div class="sec" id="road">
+  <div class="ph"><span class="badge b-dk">Дорожные карты</span><div class="pt">Путь сотрудника</div><div class="pd">От «нужен человек» до «человек работает» — по каждой стране.</div></div>
+  <div class="rm-tabs">
+    <div class="rm-tab active" onclick="rmTab(this,'rm-bd')">🇧🇩 Бангладеш</div>
+    <div class="rm-tab" onclick="rmTab(this,'rm-in')">🇮🇳 Индия</div>
+    <div class="rm-tab ko" onclick="rmTab(this,'rm-ko')">🇰🇵 Северная Корея</div>
+  </div>
+  <!-- BANGLADESH -->
+  <div class="rm-content active" id="rm-bd">
+    <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px">Полный цикл: <strong>~6 месяцев</strong> · Большая часть — государственные сроки</p>
+    <div class="road">
+      <div class="rnode"><div class="rnum bl">0</div><div class="rbody"><div class="rtitle">Определить страну, должность и регион трудовой деятельности</div><div class="rdesc">Квоты выдаются на конкретную должность, юрлицо, страну происхождения и <strong>регион осуществления трудовой деятельности</strong>. Важно: компания может быть зарегистрирована в Москве, а квоты подаются на Ленинградскую область — если работа там. При желании сменить страну — квоты подаются заново (вакансии перевешивать не нужно).</div></div></div>
+      <div class="rnode"><div class="rnum bl">1</div><div class="rbody free"><div class="rtitle">Размещение вакансий на Работа России — 30 дней</div><div class="rdesc">Обязательное условие перед подачей на квоты. Размещает юрлицо заказчика.</div><div class="rmeta"><span class="tag tb">30 дней</span><span class="tag tg">Бесплатно</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">2</div><div class="rbody"><div class="rtitle">Квоты — 3–4 месяца</div><div class="rdesc">Заявка в Комитет по труду региона. Региональная комиссия оценивает потребность и принимает решение (при крупных запросах могут участвовать МВД, ФСБ, Минэкономразвития региона). Минтруд РФ выпускает общий приказ. Квоты обезличенные — без фамилий.</div><div class="rdesc" style="margin-top:6px">После издания приказа Минтруда идём подавать на РнП.</div><div class="rmeta"><span class="tag tw">3–4 месяца включая приказ Минтруда</span><span class="tag tw">Услуга Авагар: 50 000 ₽ — одна должность (кол-во людей не важно)</span></div></div></div>
+      <div class="rnode"><div class="rnum g">→</div><div class="rbody free"><div class="rtitle">Подбор в Бангладеш — параллельно с ожиданием приказа Минтруда</div><div class="rdesc">Подбор осуществляется <strong>между квотами и РнП</strong> — для подачи на РнП уже нужны паспорта конкретных иностранцев, так как РнП оформляется на конкретных лиц. Авагар работает через партнёрские агентства в Бангладеш + собственные выездные тесты. Включает: профтестирование, видео-демонстрацию навыков, обучение русскому языку, медицину до отъезда (снижение риска на этапе РнР). К выходу приказа паспорта уже готовы.</div><div class="rmeta"><span class="tag tg">Подбор — бесплатно</span><span class="tag tg">Обучение РЯ — бесплатно</span><span class="tag tg">Медицина в Бангладеш — бесплатно</span><span class="tag tg">Авиабилеты — бесплатно</span><span class="tag tg">Консульский сбор — бесплатно</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">3</div><div class="rbody"><div class="rtitle">Разрешение на привлечение (РнП)</div><div class="rdesc">МВД (УВМ). Подаётся <strong>пофамильно</strong> — на каждого конкретного человека по паспорту. Ровно 30 рабочих дней, быстрее не делают.</div><div class="rmeta"><span class="tag tb">30 рабочих дней (~1,5 мес.)</span><span class="tag tr">Госпошлина: 12 000 ₽/чел. — не возвращается при отказе</span><span class="tag tw">Услуга Авагар: 5 000 ₽/чел.</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">4</div><div class="rbody"><div class="rtitle">РнР + Приглашение на въезд — параллельно</div><div class="rdesc">Подаются на следующий день <strong>после получения</strong> разрешения на привлечение. Через 15 календарных дней на Госуслугах приходит электронное приглашение и решение о выдаче РнР. Далее электронное приглашение направляется сотруднику — он идёт в посольство.</div><div class="rmeta"><span class="tag tb">15 календарных дней</span><span class="tag tr">РнР: госпошлина 4 200 ₽ + услуга 5 000 ₽</span><span class="tag tr">Приглашение: госпошлина 960 ₽ + услуга 5 000 ₽</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">5</div><div class="rbody"><div class="rtitle">Получение визы в посольстве</div><div class="rdesc">Сотрудник получает электронное приглашение, проходит медицину в своей стране (ВИЧ, сифилис и пр.), заполняет визовую анкету, сдаёт паспорт в российское посольство для проставления рабочей визы.</div><div class="rmeta"><span class="tag tb">5–15 рабочих дней</span><span class="tag tg">Авиабилеты — за счёт Авагар (любой город назначения)</span><span class="tag tg">Консульский сбор — за счёт Авагар</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">6</div><div class="rbody"><div class="rtitle">Прилёт — встреча и трансфер</div><div class="rdesc">Авагар встречает в аэропорту и довозит до места проживания. <strong>Жильё и питание — на заказчике.</strong> Дальнейшее размещение заказчик организует самостоятельно.</div></div></div>
+      <div class="rnode"><div class="rnum bl">7</div><div class="rbody"><div class="rtitle">Постановка на миграционный учёт</div><div class="rdesc">Собственник общежития самостоятельно ставит на миграционный учёт в течение <strong>7 рабочих дней с даты въезда</strong> иностранного гражданина на территорию России. Нарушение срока — штраф для принимающей стороны.</div><div class="rmeta"><span class="tag tw">7 рабочих дней с даты въезда</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">8</div><div class="rbody"><div class="rtitle">Медкомиссия, дактилоскопия, фотографирование, ДМС, нотариальный перевод паспорта</div><div class="rdesc">Все сотрудники проходят медкомиссию + дактилоскопию (откатка пальцев) + фотографирование. Параллельно оформляем ДМС и нотариальный перевод паспорта — всё необходимо для получения пластика РнР. Если по медкомиссии выявлено заболевание — РнР не выдаётся. Именно поэтому медицину проводим ещё в Бангладеш до отъезда.</div><div class="rmeta"><span class="tag tb">Медицина: 5 рабочих дней</span><span class="tag tb">Дакто: ~2 недели</span><span class="tag tr">Итого по п.8: 15 000 ₽/чел.</span></div></div></div>
+      <div class="rnode"><div class="rnum bl">9</div><div class="rbody"><div class="rtitle">Получение пластика РнР</div><div class="rdesc">Авагар собирает пакет (медицина + дактилоскопия + ДМС + перевод паспорта) и подаёт в МВД. Получаем пластиковое разрешение на работу — основной документ, разрешающий трудовую деятельность.</div></div></div>
+      <div class="rnode"><div class="rnum bl">10</div><div class="rbody"><div class="rtitle">Продление визы до 1 года + трудовой договор + уведомление МВД</div><div class="rdesc">Первоначальная виза — 90 дней. После получения РнР продлеваем до года. Заключается трудовой договор. Авагар подаёт уведомление в МВД о заключении ТД. Сотрудник официально трудоустроен. Работает до 3 лет без выезда. Ежегодно — процедура продления документов.</div><div class="rmeta"><span class="tag tr">Продление визы: госпошлина 1 200 ₽ + услуга 5 000 ₽</span><span class="tag tr">Уведомление МВД: 3 000 ₽</span><span class="tag tw">Госуслуги / карта / сим: ~1 500 ₽</span></div></div></div>
+      <div class="rnode"><div class="rnum g">✓</div><div class="rbody total"><div class="rtitle">Итого: стоимость миграционного сопровождения на 1 человека</div><div class="rdesc"><strong>Подбор — бесплатно.</strong></div>
+        <div style="margin-top:10px">
+          <table class="dt" style="margin:0">
+            <thead><tr><th>Статья</th><th style="text-align:right">Сумма</th></tr></thead>
+            <tbody>
+              <tr><td>Госпошлины (РнП + РнР + приглашение + продление визы)</td><td style="text-align:right" class="price">18 360 ₽</td></tr>
+              <tr><td>Документы (медицина, дакто, фото, ДМС, перевод паспорта)</td><td style="text-align:right" class="price">15 000 ₽</td></tr>
+              <tr><td>Комиссия Авагар (РнП + РнР + приглашение + продление + уведомление МВД + пр.)</td><td style="text-align:right" class="price">24 500 ₽</td></tr>
+              <tr><td>Квоты (50 000 ₽ × кол-во должностей)</td><td style="text-align:right" class="price">50 000 ₽+</td></tr>
+              <tr><td><strong>ИТОГО миграционное сопровождение на 1 чел.</strong></td><td style="text-align:right"><strong class="price">57 860 ₽</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div></div>
+    </div>
+  </div>
+  <!-- INDIA -->
+  <div class="rm-content" id="rm-in">
+    <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px">Процесс <strong>идентичен Бангладеш</strong> · ~6 месяцев · Все госпошлины и услуги те же</p>
+    <div class="note ni">Маршрут по Индии совпадает с Бангладеш шаг в шаг. Отличие: рассрочки нет (только по Бангладеш). Партнёры в Индии + для работодателей доступны выездные туры для самостоятельного выбора кандидатов. Стоимость миграционного сопровождения — те же <strong>57 860 ₽/чел.</strong> + 50 000 ₽/должность квоты.</div>
+    <div class="note nw"><strong>Про «агентов».</strong> Международные агентства, которые «работают напрямую», закрывают только подбор и финальный поход кандидата в посольство. Они не знают российского законодательства и не делают квоты, РнП, РнР, приглашение, медицину, дактилоскопию — всё это нужно делать отдельно на территории России.</div>
+  </div>
+  <!-- NORTH KOREA -->
+  <div class="rm-content" id="rm-ko">
+    <p style="color:var(--muted);font-size:13.5px;margin-bottom:16px">Срок от заявки: <strong>1,5–3 месяца</strong> · Студенческая виза · Квоты и РнП не нужны</p>
+    <div class="note nk">ООН запрещает трудовую деятельность граждан КНДР. Въезжают как <strong>студенты на производственную практику</strong>. Квоты, РнП, РнР — не нужны.</div>
+    <div class="road" style="margin-top:20px">
+      <div class="rnode"><div class="rnum ko">1</div><div class="rbody ko"><div class="rtitle">Проверка компании</div><div class="rdesc">Правительство КНДР проверяет самостоятельно: 3+ лет, нет долгов по налогам, нет банкротства. Не пройдёт — персонал не отгружается.</div><div class="rmeta"><span class="tag tk">Проверяет правительство КНДР</span></div></div></div>
+      <div class="rnode"><div class="rnum ko">2</div><div class="rbody ko"><div class="rtitle">Оплата 1 700 USD/чел. — 100% аванс</div><div class="rdesc">После оплаты начинается подбор.</div><div class="rmeta"><span class="tag tk">1 700 USD/чел. · 100% аванс</span></div></div></div>
+      <div class="rnode"><div class="rnum ko">3</div><div class="rbody ko"><div class="rtitle">Подбор правительством КНДР</div><div class="rdesc">Подбирает правительство КНДР, не Авагар. Возможен вариант 25% профессионалов + 75% обучаются. Обучаются быстро, дисциплина — самая высокая из трёх направлений.</div></div></div>
+      <div class="rnode"><div class="rnum ko">4</div><div class="rbody ko"><div class="rtitle">Оформление через учебный центр</div><div class="rdesc">В каждом регионе — свой аккредитованный учебный центр (аккредитован межправительственной комиссией). Он оформляет приглашение на студенческую визу. Трёхсторонний договор: заказчик + учебный центр + студент.</div><div class="rmeta"><span class="tag tk">Студенческая виза</span><span class="tag tgr">Трёхсторонний договор</span></div></div></div>
+      <div class="rnode"><div class="rnum ko">5</div><div class="rbody ko"><div class="rtitle">Прилёт с сопровождающими</div><div class="rdesc">До 100 чел. — бригадир. На 100+ обязательно: бригадир + переводчик + повар. ЗП каждого = ЗП рядового сотрудника.</div><div class="rmeta"><span class="tag tk">Бригадир — всегда</span></div></div></div>
+      <div class="rnode"><div class="rnum ko">6</div><div class="rbody ko"><div class="rtitle">Проживание — только общежитие</div><div class="rdesc">Студенты не могут жить в бытовках. Только общежитие — обязательное требование.</div><div class="rmeta"><span class="tag tk">Только общежитие</span><span class="tag tr">Бытовки — недопустимы</span></div></div></div>
+      <div class="rnode"><div class="rnum g">✓</div><div class="rbody free"><div class="rtitle">Производственная практика → Человек работает</div><div class="rdesc">Разрешение на работу не оформляется.</div><div class="rmeta"><span class="tag tg">✓ Готово</span></div></div></div>
+    </div>
+    <h3 style="margin-top:24px">Финансовые условия</h3>
+    <table class="dt">
+      <thead><tr><th>Статья</th><th>Размер</th><th>Комментарий</th></tr></thead>
+      <tbody>
+        <tr><td>Разовая оплата (аванс)</td><td class="price">1 700 USD/чел.</td><td>100%. После оплаты — подбор.</td></tr>
+        <tr><td>Зарплата</td><td class="price">90 000–120 000 ₽</td><td>Устанавливает правительство КНДР. Считать от 120 000.</td></tr>
+        <tr><td>Комиссия учебному центру</td><td class="price">8,7% от ЗП</td><td>Ежемесячно</td></tr>
+        <tr><td>Комиссия Авагар</td><td class="price">3 500 ₽/чел.</td><td>Ежемесячно, фиксированно</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ВИЗОВЫЙ -->
+<div class="sec" id="vizovye">
+  <div class="ph"><span class="badge b-bl">Направление 1</span><div class="pt">Визовый иностранный персонал</div><div class="pd">Бангладеш и Индия. Подбор бесплатно. Миграционное сопровождение на территории РФ — 57 860 ₽/чел.</div></div>
+  <h2>Безвизовые vs визовые</h2>
+  <p><strong>Безвизовые</strong> (Узбекистан, Таджикистан, ЕАЭС) — въезжают свободно, патент оформляют сами, нет привязки по разрешительным документам к конкретному работодателю. Оплата труда выше, чем у визовых — рынок безвизовых перегрет, ставки продолжают расти. Могут в любой момент перейти к другому юрлицу.</p>
+  <p><strong>Визовые</strong> (Бангладеш, Индия, Туркмения, Турция, Северная Корея) — въезжают только под конкретного работодателя. Без действующего приглашения от конкретного юрлица приехать невозможно.</p>
+  <h2>Почему компании выбирают визовый персонал</h2>
+  <table class="dt">
+    <thead><tr><th>Безвизовые</th><th>Визовые (Бангладеш, Индия)</th></tr></thead>
+    <tbody>
+      <tr><td>Оплата труда уже выше (строительство: 120–150 тыс. ₽)</td><td>Оплата труда от 70 000 ₽ на руки</td></tr>
+      <tr><td>Нет привязки к работодателю — могут бегать с объекта на объект за большей зарплатой</td><td>Контролируемый въезд — только под конкретное юрлицо</td></tr>
+      <tr><td>Приезжают с семьями — нагрузка на социальную и медицинскую инфраструктуру</td><td>Приезжают только под трудовую деятельность, без семей — нет нагрузки на соц. сферу</td></tr>
+      <tr><td>Рынок сужается: постоянные выдворения, штрафные санкции</td><td>Все расходы на содержание и передвижение — на работодателе (юрлице)</td></tr>
+      <tr><td>Непредсказуемость: получили зарплату — не вышли</td><td>Если вынесен запрет на въезд за нарушение — выезд за счёт работодателя</td></tr>
+    </tbody>
+  </table>
+  <div class="note ni">Чтобы визовый сотрудник легально перешёл к другому работодателю — новое юрлицо проходит весь цикл заново: квоты, разрешения, виза. Ещё ~6 месяцев и полная стоимость. Текучка среди визовых минимальна.</div>
+  <h2>Стоимость миграционного сопровождения (1 человек)</h2>
+  <div class="note ns">Подбор персонала — бесплатно. Авиабилеты, консульский сбор, медицина в Бангладеш — за счёт Авагар.</div>
+  <table class="dt">
+    <thead><tr><th>Статья</th><th style="text-align:right">Сумма</th><th>Из них</th></tr></thead>
+    <tbody>
+      <tr><td>Госпошлины (РнП + РнР + приглашение + продление визы)</td><td style="text-align:right" class="price">18 360 ₽</td><td style="font-size:12px;color:var(--muted)">12 000 + 4 200 + 960 + 1 200</td></tr>
+      <tr><td>Документы (медицина, дакто, фото, ДМС, нотар. перевод)</td><td style="text-align:right" class="price">15 000 ₽</td><td style="font-size:12px;color:var(--muted)">итого по п.8</td></tr>
+      <tr><td>Комиссия Авагар</td><td style="text-align:right" class="price">24 500 ₽</td><td style="font-size:12px;color:var(--muted)">5 000 × 4 этапа + 3 000 + 1 500</td></tr>
+      <tr><td>Квоты (50 000 ₽ × кол-во должностей)</td><td style="text-align:right" class="price">50 000 ₽+</td><td style="font-size:12px;color:var(--muted)">1 должность = 1 заявка</td></tr>
+      <tr><td><strong>ИТОГО на 1 человека</strong></td><td style="text-align:right"><strong class="price">57 860 ₽</strong></td><td></td></tr>
+    </tbody>
+  </table>
+  <h2>Ежемесячные затраты на 1 сотрудника</h2>
+  <p>Минимальная оплата — <strong>70 000 ₽ на руки</strong>. При сдельной оплате итог за месяц не ниже этой суммы. Питание и жильё — на заказчике.</p>
+  <table class="dt">
+    <thead><tr><th>Статья</th><th>Первые 6 мес. (нерезидент)</th><th>С 7-го мес. (резидент)</th></tr></thead>
+    <tbody>
+      <tr><td>Оклад (gross)</td><td class="price">80 500 ₽</td><td class="price">80 500 ₽</td></tr>
+      <tr><td>НДФЛ</td><td class="warn-val">24 150 ₽ (30%)</td><td class="price">10 465 ₽ (13%)</td></tr>
+      <tr><td>На руки (банковская карта)</td><td class="warn-val">56 350 ₽</td><td class="price">70 035 ₽</td></tr>
+      <tr><td>Страховые взносы (30%)</td><td class="price">24 150 ₽</td><td class="price">24 150 ₽</td></tr>
+      <tr><td>Взносы по НС (базовый тариф 0,2%)*</td><td class="price">161 ₽</td><td class="price">161 ₽</td></tr>
+      <tr><td><strong>ИТОГО затрат на работодателя</strong></td><td><strong class="price">104 811 ₽</strong></td><td><strong class="price">104 811 ₽</strong></td></tr>
+      <tr><td>+ Ежемесячный контроль документов (опция)</td><td colspan="2" class="price">10 000 ₽/чел./мес.</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">* Расчёт из базового тарифа 0,2%. У заказчика может быть иной тариф в зависимости от ОКВЭД.</p>
+  <div class="note nw">Первые 6 месяцев НДФЛ — 30% (нерезиденты): на руки 56 350 ₽. С 7-го месяца — 13%: на руки 70 035 ₽. Итоговые затраты работодателя одинаковы в оба периода. Клиент должен знать это до подписания.</div>
+  <h2>Дополнительные услуги</h2>
+  <table class="dt">
+    <thead><tr><th>Услуга</th><th>Стоимость</th><th>Подробности</th></tr></thead>
+    <tbody>
+      <tr><td>Переводчик</td><td class="price">2 000 ₽/час</td><td>При встрече в аэропорту, сопровождении</td></tr>
+      <tr><td>Бригадир-переводчик</td><td class="price">= ЗП рядового</td><td>Постоянно на объекте</td></tr>
+      <tr><td>Ежемесячный контроль документов</td><td class="price">10 000 ₽/чел./мес.</td><td>Авагар следит за сроками, уведомляет</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- СЕВЕРНАЯ КОРЕЯ -->
+<div class="sec" id="korea">
+  <div class="ph"><span class="badge b-ko">Направление 1б</span><div class="pt">Северная Корея</div><div class="pd">Студенческая виза. Срок 1,5–3 месяца. Схема через учебный центр.</div></div>
+  <div class="note nk">ООН запрещает трудовую деятельность граждан КНДР. Въезжают как студенты на производственную практику. Квоты, РнП, РнР — не нужны.</div>
+  <h2>Отличия от Бангладеш/Индии</h2>
+  <table class="dt">
+    <thead><tr><th>Параметр</th><th>Бангладеш / Индия</th><th>Северная Корея</th></tr></thead>
+    <tbody>
+      <tr><td>Виза</td><td>Рабочая</td><td class="warn-val">Студенческая</td></tr>
+      <tr><td>Квоты / РнП / РнР</td><td>Нужны</td><td class="free">Не нужны</td></tr>
+      <tr><td>Срок</td><td>~6 месяцев</td><td class="price">1,5–3 месяца</td></tr>
+      <tr><td>Кто приглашает</td><td>Работодатель</td><td>Учебный центр региона</td></tr>
+      <tr><td>Кто подбирает</td><td>Авагар + партнёры</td><td>Правительство КНДР</td></tr>
+      <tr><td>Проживание</td><td>Бытовки или общежитие</td><td class="warn-val">Только общежитие</td></tr>
+      <tr><td>Разовая оплата</td><td>Нет</td><td class="price">1 700 USD/чел. — 100% аванс</td></tr>
+    </tbody>
+  </table>
+  <h2>Требования к заказчику</h2>
+  <ul>
+    <li>Компания существует <strong>3 года и более</strong></li>
+    <li>Нет долгов по налогам</li>
+    <li>Нет банкротства</li>
+    <li>Правительство КНДР проверяет самостоятельно — не пройдёт, персонал не отгружается</li>
+  </ul>
+  <h2>Финансовые условия</h2>
+  <table class="dt">
+    <thead><tr><th>Статья</th><th>Размер</th><th>Комментарий</th></tr></thead>
+    <tbody>
+      <tr><td>Разовая оплата (аванс)</td><td class="price">1 700 USD/чел.</td><td>100%. После оплаты начинается подбор.</td></tr>
+      <tr><td>Зарплата</td><td class="price">90 000–120 000 ₽</td><td>Устанавливает правительство КНДР. При расчёте считать от 120 000 ₽.</td></tr>
+      <tr><td>Комиссия учебному центру</td><td class="price">8,7% от ЗП</td><td>Ежемесячно</td></tr>
+      <tr><td>Комиссия Авагар</td><td class="price">3 500 ₽/чел./мес.</td><td>Фиксированно</td></tr>
+    </tbody>
+  </table>
+  <h2>Состав бригады</h2>
+  <table class="dt">
+    <thead><tr><th>Роль</th><th>Условие</th><th>Оплата</th></tr></thead>
+    <tbody>
+      <tr><td>Бригадир</td><td>Всегда, при любом количестве</td><td class="price">= ЗП рядового</td></tr>
+      <tr><td>Переводчик</td><td>При 100+ людях</td><td class="price">= ЗП рядового</td></tr>
+      <tr><td>Повар</td><td>При 100+ людях</td><td class="price">= ЗП рядового</td></tr>
+    </tbody>
+  </table>
+  <p>Проживание — <strong>только общежитие</strong>. Бытовки для студентов недопустимы.</p>
+</div>
+
+<!-- АУТСТАФФИНГ -->
+<div class="sec" id="autstaffing">
+  <div class="ph"><span class="badge b-gr">Направление 2</span><div class="pt">Вывод за штат</div><div class="pd">Клиент уже имеет иностранцев. Авагар берёт их в штат и ведёт всё.</div></div>
+  <h2>Суть</h2>
+  <p>Сотрудники физически работают у клиента, юридически числятся в штате Авагар. Авагар — официальный работодатель: заключает ТД, выплачивает зарплату, ведёт кадровые документы, контролирует миграционные сроки. Основание — лицензия ЧАЗ.</p>
+  <p>Договор предоставления персонала с клиентом. Клиент ежемесячно платит за фактически оформленных сотрудников.</p>
+  <h2>Что делает Авагар</h2>
+  <ul>
+    <li>Заключает трудовой договор с каждым сотрудником</li>
+    <li>Подаёт уведомление в МВД о заключении ТД</li>
+    <li>Проверяет документы иностранных граждан при оформлении</li>
+    <li>Выплачивает зарплату два раза в месяц на банковские карты</li>
+    <li>Контролирует сроки документов (патенты, миграционный учёт) — уведомляет заранее</li>
+    <li>Оформляет увольнение по письменному запросу заказчика</li>
+  </ul>
+  <h2>Комиссия Авагар (по фактически оформленным в месяц)</h2>
+  <table class="dt">
+    <thead><tr><th>Количество сотрудников</th><th>Комиссия за 1 чел./мес.</th></tr></thead>
+    <tbody>
+      <tr><td>До 5 чел. включительно</td><td class="price">6 000 ₽</td></tr>
+      <tr><td>До 10 чел.</td><td class="price">5 000 ₽</td></tr>
+      <tr><td>11–30 чел.</td><td class="price">4 500 ₽</td></tr>
+      <tr><td>31 и более</td><td class="price">4 000 ₽</td></tr>
+    </tbody>
+  </table>
+  <h2>Структура ежемесячного платежа</h2>
+  <table class="dt">
+    <thead><tr><th>Составляющая</th><th>Комментарий</th></tr></thead>
+    <tbody>
+      <tr><td>ФОТ</td><td>МРОТ или МРОТ +15%. Согласовывается.</td></tr>
+      <tr><td>НДФЛ</td><td>По резидентству сотрудника.</td></tr>
+      <tr><td>Страховые взносы (30%)</td><td>Обязательные отчисления.</td></tr>
+      <tr><td>Комиссия Авагар</td><td class="price">По таблице выше, по фактически оформленным</td></tr>
+      <tr><td><strong>НДС 22%</strong></td><td class="warn-val"><strong>На всю сумму (ФОТ + налоги + комиссия)</strong></td></tr>
+    </tbody>
+  </table>
+  <h2>Миграционный учёт (регистрация) — 7 000 ₽/чел.</h2>
+  <p>Только если у заказчика есть собственность, где живут сотрудники (бытовки, квартиры) — он сдаёт её Авагар по договору аренды → Авагар становится и работодателем, и принимающей стороной → ставит на учёт и продлевает.</p>
+  <p><strong>Стоимость:</strong> 7 000 ₽ на человека за каждую постановку или продление. <strong>Срок регистрации</strong> зависит от количества оплаченных сотрудником патентных чеков (государственный платёж 8 000 ₽/чек = 1 месяц патента). Оплатил чеки на 3 месяца — регистрация на 3 месяца, на 6 — на 6.</p>
+  <div class="note nw">Если жильё не передано Авагар по договору аренды — Авагар не может выступать принимающей стороной и не ведёт миграционный учёт. Ответственность за регистрацию остаётся на клиенте.</div>
+</div>
+
+<!-- СУДЫ -->
+<div class="sec" id="sudy">
+  <div class="ph"><span class="badge b-am">Направление 3</span><div class="pt">Нарушения и суды</div><div class="pd">Уже вынесен протокол. Обжалуем, снижаем, отменяем.</div></div>
+  <div class="split">
+    <div class="card"><div class="cs" style="background:var(--accent)"></div><h4>Юридические лица</h4><ul><li>Протокол о привлечении</li><li>Штрафы от <strong>400 000 ₽</strong></li><li>Нужно снизить или отменить</li></ul></div>
+    <div class="card"><div class="cs" style="background:var(--amber)"></div><h4>Физлица (иностранцы)</h4><ul><li>Штраф <strong>5 000 ₽</strong> (нет учёта)</li><li>Запрет на въезд</li><li>Нужно снять запрет</li></ul></div>
+  </div>
+  <h2>Стоимость</h2>
+  <table class="dt">
+    <thead><tr><th>Услуга</th><th>Стоимость</th><th>Комментарий</th></tr></thead>
+    <tbody>
+      <tr><td>Подача жалобы (первая инстанция)</td><td class="price">35 000 ₽</td><td>Подготовка пакета + выход в суд</td></tr>
+      <tr><td>Дальнейшие инстанции</td><td class="warn-val">Индивидуально</td><td>После изучения дела: сложность, регион, инстанции</td></tr>
+      <tr><td>Персонал Авагар</td><td class="free">В рамках договора</td><td>Если привлекли наших сотрудников</td></tr>
+    </tbody>
+  </table>
+  <div class="note nw">Гарантий нет. Сначала — изучение дела и оценка перспектив, потом итоговая цена. Работаем в СПб и Москве, иногда другие регионы.</div>
+</div>
+
+<!-- КТО КЛИЕНТ -->
+<div class="sec" id="kto">
+  <div class="ph"><span class="badge b-dk">Справочник</span><div class="pt">Кто обращается</div></div>
+  <h2>Визовый персонал</h2>
+  <p>Средний+ и крупный бизнес. Строительство, производство, фабрики. Есть бюджет и горизонт 6+ месяцев. Часто уже работали с безвизовыми — столкнулись с нестабильностью или ростом ставок.</p>
+  <div class="note ni">Клиент с иностранцами от другого агентства — не повод отказываться. Предложи сравнение, пробный завоз Бангладеш, или помощь с оформлением.</div>
+  <h2>Северная Корея</h2>
+  <p>Строительные компании 3+ лет, нет долгов. Нужен персонал быстро. Готовы к 100% авансу в USD.</p>
+  <h2>Вывод за штат</h2>
+  <p>Малый и средний бизнес с иностранцами (чаще безвизовыми). Нет кадровика или бухгалтера. Устали от нарушений и штрафов за документы.</p>
+  <h2>Нарушения и суды</h2>
+  <p>Юрлицо или физлицо с протоколом. Часто срочно. Также — компании после проверки МВД с риском претензий.</p>
+</div>
+
+<!-- КАЛЬКУЛЯТОР КП -->
+<div class="sec" id="calc">
+  <div class="ph"><span class="badge" style="background:#E8B84B;color:#0D1117">Калькулятор</span><div class="pt">Расчёт коммерческого предложения</div><div class="pd">Отметьте нужные услуги — итог обновится сразу.</div></div>
+
+  <div class="c-service-wrap">
+    <div class="c-service-tabs">
+      <button class="c-stab active" onclick="switchSvc(this,'vizovye')">🇧🇩 Бангладеш</button>
+      <button class="c-stab" onclick="switchSvc(this,'india')">🇮🇳 Индия</button>
+      <button class="c-stab" onclick="switchSvc(this,'korea')">🇰🇵 Северная Корея</button>
+      <button class="c-stab" onclick="switchSvc(this,'autstaffing')">📋 Вывод за штат</button>
+    </div>
+  </div>
+
+  <!-- ===== VIZOVYE ===== -->
+  <div class="c-params active" id="p-vizovye">
+    <div class="c-toprow">
+      <div class="c-field">
+        <label class="c-label">Кол-во сотрудников</label>
+        <input class="c-input" type="number" id="v-count" min="1" max="500" value="5" oninput="calc()">
+      </div>
+      <div class="c-field">
+        <label class="c-label">Оклад сотрудника (gross, ₽)</label>
+        <input class="c-input" type="number" id="v-oklad" min="30000" max="500000" value="80500" oninput="calc()">
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Минимум по КП: 80 500 ₽</div>
+      </div>
+    </div>
+    <!-- Режим: полное оформление vs только привоз -->
+    <div style="display:flex;gap:6px;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px">
+      <button id="v-mode-full" onclick="setVizMode('full','v')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s">📋 Полное оформление</button>
+      <button id="v-mode-kvoty" onclick="setVizMode('kvoty','v')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">📑 Только квоты</button>
+      <button id="v-mode-privoz" onclick="setVizMode('privoz','v')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">✈️ Только привоз</button>
+    </div>
+    <div id="v-full-block">
+    <div class="c-section-label">Разовые — отметьте нужные этапы</div>
+    <div style="overflow-x:auto;margin-bottom:4px">
+    <table class="vt">
+      <thead>
+        <tr>
+          <th class="vt-chk"></th>
+          <th>Этап / услуга</th>
+          <th class="vt-gos">Госпошлина</th>
+          <th class="vt-kom">Услуга Авагар</th>
+          <th class="vt-sum">Итого</th>
+          <th class="vt-unit"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="vt-group"><td colspan="6">📋 До въезда — оформление квот и разрешений</td></tr>
+        <tr class="vt-row" data-gos="0" data-kom="5000" data-per="1">
+          <td><input type="checkbox" id="v-kvoty" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Подача на квоты</b><div class="vt-sub">Комитет по труду региона → приказ Минтруда · 3–4 мес.</div></td>
+          <td class="vt-gos-v">—</td><td class="vt-kom-v">5 000 ₽</td><td class="vt-sum-v">5 000 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-row" data-gos="12000" data-kom="5000" data-per="1">
+          <td><input type="checkbox" id="v-rnp" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Разрешение на привлечение (РнП)</b><div class="vt-sub">МВД · 30 рабочих дней · не возвращается при отказе</div></td>
+          <td class="vt-gos-v">12 000 ₽</td><td class="vt-kom-v">5 000 ₽</td><td class="vt-sum-v">17 000 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-row" data-gos="4200" data-kom="5000" data-per="1">
+          <td><input type="checkbox" id="v-rnr" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Разрешение на работу (РнР)</b><div class="vt-sub">МВД · 15 кал. дней после получения РнП</div></td>
+          <td class="vt-gos-v">4 200 ₽</td><td class="vt-kom-v">5 000 ₽</td><td class="vt-sum-v">9 200 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-row" data-gos="960" data-kom="5000" data-per="1">
+          <td><input type="checkbox" id="v-invite" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Приглашение на въезд</b><div class="vt-sub">Подаётся параллельно с РнР · основание для рабочей визы</div></td>
+          <td class="vt-gos-v">960 ₽</td><td class="vt-kom-v">5 000 ₽</td><td class="vt-sum-v">5 960 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-group"><td colspan="6">✈️ После прилёта — оформление в России</td></tr>
+        <tr class="vt-row" data-gos="0" data-kom="15000" data-per="1">
+          <td><input type="checkbox" id="v-docs" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Медкомиссия, дактилоскопия, фото, ДМС, нотар. перевод</b><div class="vt-sub">Весь пакет для получения пластика РнР</div></td>
+          <td class="vt-gos-v">—</td><td class="vt-kom-v">15 000 ₽</td><td class="vt-sum-v">15 000 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-row" data-gos="0" data-kom="3000" data-per="1">
+          <td><input type="checkbox" id="v-notify" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Уведомление МВД о заключении трудового договора</b><div class="vt-sub">Обязательно при трудоустройстве</div></td>
+          <td class="vt-gos-v">—</td><td class="vt-kom-v">3 000 ₽</td><td class="vt-sum-v">3 000 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-row" data-gos="0" data-kom="1500" data-per="1">
+          <td><input type="checkbox" id="v-snils" onchange="calc();updateVizTable()"></td>
+          <td><b>Госуслуги, банковская карта, сим-карта</b><div class="vt-sub">Выезд на объект · Госуслуги — обязательны для РнР</div></td>
+          <td class="vt-gos-v">—</td><td class="vt-kom-v">до 1 500 ₽</td><td class="vt-sum-v">до 1 500 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+        <tr class="vt-group"><td colspan="6">🔄 Продление документов</td></tr>
+        <tr class="vt-row" data-gos="1200" data-kom="5000" data-per="1">
+          <td><input type="checkbox" id="v-prolong" checked onchange="calc();updateVizTable()"></td>
+          <td><b>Продление визы до 1 года</b><div class="vt-sub">После получения РнР · первоначальная виза — 90 дней</div></td>
+          <td class="vt-gos-v">1 200 ₽</td><td class="vt-kom-v">5 000 ₽</td><td class="vt-sum-v">6 200 ₽</td>
+          <td class="vt-u">/ чел.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="vt-cards">
+      <div class="vtc vtc-gos"><div class="vtc-lbl">Госпошлины</div><div class="vtc-val" id="vt-gos-sum">18 360 ₽</div><div class="vtc-hint">фиксированы государством<br>не возвращаются при отказе</div></div>
+      <div class="vtc-plus">+</div>
+      <div class="vtc vtc-kom"><div class="vtc-lbl">Услуги Авагар</div><div class="vtc-val" id="vt-kom-sum">39 500 ₽</div><div class="vtc-hint">подача документов, сопровождение</div></div>
+      <div class="vtc-plus">=</div>
+      <div class="vtc vtc-tot"><div class="vtc-lbl">ИТОГО на 1 чел.</div><div class="vtc-val" id="vt-sum-sum">57 860 ₽</div><div class="vtc-hint">+ квоты 50 000 ₽/должность</div></div>
+    </div>
+    </div><!-- /v-full-block -->
+
+    <!-- Только привоз -->
+    <div id="v-privoz-block" style="display:none">
+      <div style="background:var(--info-bg);border:1px solid #BDD0F0;border-radius:10px;padding:18px 20px;margin-bottom:16px">
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px">✈️ Что входит в привоз</div>
+        <ul style="margin:0;padding-left:18px;color:#2D3748;font-size:13.5px;line-height:1.8">
+          <li>Подбираем сотрудников под требования заказчика</li>
+          <li>Привозим</li>
+          <li>Встречаем в аэропорту</li>
+          <li>Доставляем до места проживания</li>
+          <li>Замена сотрудника при необходимости</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #BDD0F0;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:var(--muted)">Стоимость</span>
+          <span style="font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;color:var(--primary)">15 000 ₽ / чел.</span>
+        </div>
+      </div>
+      <div class="note nw" style="margin-top:0">Миграционное оформление в этот пакет не входит. Если потребуется — рассчитывается отдельно.</div>
+    </div>
+
+    <div id="v-monthly-block">
+    <div class="c-section-label" style="margin-top:20px">Ежемесячные услуги</div>
+    <div class="c-checklist">
+      <label class="c-check-item">
+        <input type="checkbox" id="v-abonement" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Абонентское сопровождение</div><div class="c-ci-sub">Миграционный контроль, сроки документов, юр. сопровождение · вкл. НДС 22%</div></div>
+        <div class="c-ci-price">10 000 ₽<span class="c-ci-unit">/ чел. / мес.</span></div>
+      </label>
+    </div>
+    <div class="c-section-label" style="margin-top:20px">Переводчик / бригадир <span style="font-weight:400;text-transform:none;font-family:'Golos Text',sans-serif;font-size:11px;color:var(--muted)">— цены ориентировочные</span></div>
+    <div class="c-checklist">
+      <label class="c-check-item">
+        <input type="checkbox" id="v-trans-check" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Переводчик (почасово)</div><div class="c-ci-sub" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">Часов в месяц:&nbsp;<input class="c-input-sm" type="number" id="v-hours" min="1" max="300" value="20" oninput="calc()"></div></div>
+        <div class="c-ci-price">2 000 ₽<span class="c-ci-unit">/ час</span></div>
+      </label>
+      <label class="c-check-item">
+        <input type="checkbox" id="v-brigadir" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Бригадир-переводчик (постоянный)</div><div class="c-ci-sub">Работает на объекте вместе с бригадой</div></div>
+        <div class="c-ci-price">= ЗП<span class="c-ci-unit">рядового</span></div>
+      </label>
+    </div>
+    </div>
+  </div>
+
+  <!-- ===== INDIA ===== -->
+  <div class="c-params" id="p-india">
+    <div class="note nw" style="margin-bottom:18px;font-size:13px">🇮🇳 <strong>Заготовка.</strong> Блок разовых расходов на оформление (квоты, РнП, РнР, документы) — идентичен Бангладеш. Условия по авиабилетам, встрече и доп. услугам уточняются отдельно. Рассрочка не предусмотрена.</div>
+    <div class="c-toprow">
+      <div class="c-field"><label class="c-label">Кол-во сотрудников</label><input class="c-input" type="number" id="i-count" min="1" max="500" value="5" oninput="calc()"></div>
+      <div class="c-field"><label class="c-label">Оклад сотрудника (gross, ₽)</label><input class="c-input" type="number" id="i-oklad" min="30000" max="500000" value="80500" oninput="calc()"></div>
+    </div>
+    <!-- Режим: полное оформление vs только привоз -->
+    <div style="display:flex;gap:6px;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px">
+      <button id="i-mode-full" onclick="setVizMode('full','i')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:var(--primary);color:#fff;transition:all .15s">📋 Полное оформление</button>
+      <button id="i-mode-kvoty" onclick="setVizMode('kvoty','i')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">📑 Только квоты</button>
+      <button id="i-mode-privoz" onclick="setVizMode('privoz','i')" style="flex:1;padding:9px;border:none;border-radius:5px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">✈️ Только привоз</button>
+    </div>
+    <div id="i-full-block">
+    <div class="c-section-label">Разовые услуги — что нужно оформить?</div>
+    <div class="c-checklist">
+      <label class="c-check-item"><input type="checkbox" id="i-kvoty" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Подача на квоты</div><div class="c-ci-sub">Комитет по труду региона → приказ Минтруда · 50 000 ₽/должность, кол-во людей не влияет</div></div><div class="c-ci-price">50 000 ₽<span class="c-ci-unit">/ должность</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-rnp" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Разрешение на привлечение (РнП)</div><div class="c-ci-sub">МВД · 30 рабочих дней · госпошлина 12 000 + услуга 5 000</div></div><div class="c-ci-price">17 000 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-rnr" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Разрешение на работу (РнР)</div><div class="c-ci-sub">МВД · 15 кал. дней · госпошлина 4 200 + услуга 5 000</div></div><div class="c-ci-price">9 200 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-invite" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Приглашение на въезд</div><div class="c-ci-sub">Подаётся параллельно с РнР · госпошлина 960 + услуга 5 000</div></div><div class="c-ci-price">5 960 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-prolong" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Продление визы до 1 года</div><div class="c-ci-sub">После получения РнР · госпошлина 1 200 + услуга 5 000</div></div><div class="c-ci-price">6 200 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-docs" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Медкомиссия, дакто, фото, ДМС, нотар. перевод</div><div class="c-ci-sub">Весь пакет документов для получения пластика РнР</div></div><div class="c-ci-price">15 000 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-notify" checked onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Уведомление МВД о заключении трудового договора</div><div class="c-ci-sub">Подаётся при трудоустройстве</div></div><div class="c-ci-price">3 000 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-snils" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Госуслуги, банковская карта, сим-карта</div><div class="c-ci-sub">Выезд на объект</div></div><div class="c-ci-price">~1 500 ₽<span class="c-ci-unit">/ чел.</span></div></label>
+    </div>
+    </div><!-- /i-full-block -->
+
+    <!-- Только привоз -->
+    <div id="i-privoz-block" style="display:none">
+      <div style="background:var(--info-bg);border:1px solid #BDD0F0;border-radius:10px;padding:18px 20px;margin-bottom:16px">
+        <div style="font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;color:var(--primary);margin-bottom:10px">✈️ Что входит в привоз</div>
+        <ul style="margin:0;padding-left:18px;color:#2D3748;font-size:13.5px;line-height:1.8">
+          <li>Подбираем сотрудников под требования заказчика</li>
+          <li>Привозим</li>
+          <li>Встречаем в аэропорту</li>
+          <li>Доставляем до места проживания</li>
+          <li>Замена сотрудника при необходимости</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #BDD0F0;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:var(--muted)">Стоимость</span>
+          <span style="font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;color:var(--primary)">15 000 ₽ / чел.</span>
+        </div>
+      </div>
+      <div class="note nw" style="margin-top:0">Миграционное оформление в этот пакет не входит. Если потребуется — рассчитывается отдельно.</div>
+    </div>
+
+    <div id="i-monthly-block">
+    <div class="c-section-label" style="margin-top:20px">Ежемесячные услуги</div>
+    <div class="c-checklist">
+      <label class="c-check-item"><input type="checkbox" id="i-abonement" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Абонентское сопровождение</div><div class="c-ci-sub">Миграционный контроль, сроки документов · вкл. НДС 22%</div></div><div class="c-ci-price">10 000 ₽<span class="c-ci-unit">/ чел. / мес.</span></div></label>
+    </div>
+    <div class="c-section-label" style="margin-top:20px">Переводчик / бригадир <span style="font-weight:400;text-transform:none;font-family:'Golos Text',sans-serif;font-size:11px;color:var(--muted)">— цены ориентировочные</span></div>
+    <div class="c-checklist">
+      <label class="c-check-item"><input type="checkbox" id="i-trans-check" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Переводчик (почасово)</div><div class="c-ci-sub" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">Часов в месяц:&nbsp;<input class="c-input-sm" type="number" id="i-hours" min="1" max="300" value="20" oninput="calc()"></div></div><div class="c-ci-price">2 000 ₽<span class="c-ci-unit">/ час</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="i-brigadir" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Бригадир-переводчик (постоянный)</div><div class="c-ci-sub">Работает на объекте вместе с бригадой</div></div><div class="c-ci-price">= ЗП<span class="c-ci-unit">рядового</span></div></label>
+    </div>
+    </div>
+  </div>
+
+  <!-- ===== KOREA ===== -->
+  <div class="c-params" id="p-korea">
+    <div class="c-toprow">
+      <div class="c-field"><label class="c-label">Кол-во сотрудников</label><input class="c-input" type="number" id="k-count" min="1" max="500" value="10" oninput="calc()"></div>
+      <div class="c-field"><label class="c-label">Курс USD (₽)</label><input class="c-input" type="number" id="k-usd" min="50" max="200" value="90" oninput="calc()"></div>
+      <div class="c-field"><label class="c-label">Зарплата (ориентир)</label>
+        <select class="c-select" id="k-sal" onchange="calc()">
+          <option value="120000">120 000 ₽ (максимум)</option>
+          <option value="105000">105 000 ₽</option>
+          <option value="90000">90 000 ₽ (минимум)</option>
+        </select>
+      </div>
+    </div>
+    <div class="c-section-label">Состав сопровождения</div>
+    <div class="c-checklist">
+      <label class="c-check-item c-check-disabled"><input type="checkbox" checked disabled><div class="c-ci-body"><div class="c-ci-name">Бригадир</div><div class="c-ci-sub">Обязателен всегда</div></div><div class="c-ci-price">= ЗП<span class="c-ci-unit">рядового</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="k-translator" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Переводчик</div><div class="c-ci-sub">Требуется при 100+ чел.</div></div><div class="c-ci-price">= ЗП<span class="c-ci-unit">рядового</span></div></label>
+      <label class="c-check-item"><input type="checkbox" id="k-cook" onchange="calc()"><div class="c-ci-body"><div class="c-ci-name">Повар</div><div class="c-ci-sub">Требуется при 100+ чел.</div></div><div class="c-ci-price">= ЗП<span class="c-ci-unit">рядового</span></div></label>
+    </div>
+  </div>
+
+  <!-- ===== AUTSTAFFING ===== -->
+  <div class="c-params" id="p-autstaffing">
+    <div class="note ni" style="margin-bottom:16px;font-size:13px">Только для <strong>безвизовых иностранных граждан</strong>: Узбекистан, Таджикистан, ЕАЭС (Армения, Казахстан, Киргизия, Белоруссия).</div>
+    <div class="c-toprow">
+      <div class="c-field"><label class="c-label">Кол-во сотрудников</label><input class="c-input" type="number" id="a-count" min="1" max="500" value="5" oninput="calc()"></div>
+      <div class="c-field"><label class="c-label">Оклад (gross, ₽)</label><input class="c-input" type="number" id="a-oklad" min="22000" max="200000" value="27093" oninput="calc()"><div style="font-size:12px;color:var(--muted);margin-top:4px">МРОТ 2026: 27 093 ₽</div></div>
+    </div>
+    <div class="c-section-label">Дополнительные услуги</div>
+    <div class="c-checklist">
+      <label class="c-check-item">
+        <input type="checkbox" id="a-patent" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Оформление патента на работу</div><div class="c-ci-sub">Встреча, сопровождение на медицину и экзамен, подача и получение пластика</div></div>
+        <div class="c-ci-price" style="text-align:right"><div style="font-weight:700;color:var(--primary);font-size:14px">Нал: 47 000 ₽</div><div style="font-weight:700;color:var(--primary);font-size:14px">Безнал: 50 500 ₽</div><span class="c-ci-unit">разово</span></div>
+      </label>
+      <label class="c-check-item">
+        <input type="checkbox" id="a-cert" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Сертификат сдачи русского языка</div><div class="c-ci-sub">Только наличными · Срок действия 3 года · При отсутствии у сотрудника</div></div>
+        <div class="c-ci-price">4 000 ₽<span class="c-ci-unit">разово</span></div>
+      </label>
+      <label class="c-check-item">
+        <input type="checkbox" id="a-dakto" onchange="calc()">
+        <div class="c-ci-body"><div class="c-ci-name">Дактилоскопия + фотографирование</div><div class="c-ci-sub">Обязательно при оформлении патента</div></div>
+        <div class="c-ci-price">до 2 000 ₽<span class="c-ci-unit">разово</span></div>
+      </label>
+      <label class="c-check-item">
+        <input type="checkbox" id="a-reg" onchange="calc()">
+        <div class="c-ci-body">
+          <div class="c-ci-name">Миграционный учёт (постановка / продление)</div>
+          <div class="c-ci-sub">Только если у заказчика есть собственность (бытовки/квартиры), сдаваемая Авагар. Авагар становится принимающей стороной. Срок регистрации = оплаченным патентным чекам (8 000 ₽/чек = 1 мес.)</div>
+        </div>
+        <div class="c-ci-price">7 000 ₽<span class="c-ci-unit">/ чел. / постановка или продл.</span></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="c-result" id="c-result"></div>
+
+  <!-- KP BUTTON -->
+  <div style="margin-top:24px;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:10px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <label class="c-label" style="display:block;margin-bottom:6px">Название компании клиента</label>
+      <input class="c-input" type="text" id="kp-client" placeholder="ООО «Название»">
+    </div>
+    <button onclick="openKP()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">📄 Сформировать КП</button>
+  </div>
+</div>
+
+<!-- KP MODAL -->
+<div id="kp-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);overflow-y:auto;padding:30px 16px">
+  <div style="max-width:860px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+    <div style="background:var(--primary);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:#fff">Коммерческое предложение — Авагар</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button id="kp-copy-btn" onclick="copyKP()" style="background:#E8B84B;color:#0D1117;border:none;border-radius:6px;padding:8px 18px;font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;cursor:pointer">📋 Скопировать</button>
+        <button onclick="closeKP()" style="background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:20px;cursor:pointer">×</button>
+      </div>
+    </div>
+    <div style="padding:10px 24px;background:#EEF3FB;font-size:13px;color:var(--primary);border-bottom:1px solid var(--border)">
+      💡 Нажмите «Скопировать» → откройте Google Docs → Ctrl+V. Таблицы и форматирование сохранятся.
+    </div>
+    <div id="kp-content" style="padding:32px 40px;font-family:Arial,sans-serif;font-size:13px;line-height:1.7;color:#000"></div>
+  </div>
+</div>
+
+</main>
+<style>
+/* ===== EDIT MODE ===== */
+body.edit-mode [contenteditable=true]:hover{background:rgba(232,184,75,.08)!important;cursor:text}
+/* ===== CALCULATOR ===== */
+.c-service-wrap{margin-bottom:24px}
+.c-service-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:0}
+.c-stab{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:10px 18px;cursor:pointer;font-family:'Golos Text',sans-serif;font-size:13.5px;font-weight:600;color:var(--muted);transition:all .15s}
+.c-stab:hover{border-color:var(--primary);color:var(--primary)}
+.c-stab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.c-params{display:none}.c-params.active{display:block}
+.c-toprow{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.c-toprow .c-field{flex:1;min-width:160px;display:flex;flex-direction:column;gap:5px}
+.c-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+.c-input,.c-select{font-family:'Golos Text',sans-serif;font-size:15px;padding:9px 12px;border:1.5px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);outline:none;transition:border-color .15s;width:100%}
+.c-input:focus,.c-select:focus{border-color:var(--primary)}
+.c-input-sm{font-family:'Golos Text',sans-serif;font-size:14px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;background:var(--paper);color:var(--ink);outline:none;width:70px}
+.c-input-sm:focus{border-color:var(--primary)}
+.c-section-label{font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.c-checklist{display:flex;flex-direction:column;gap:0;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px}
+.c-check-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s;user-select:none}
+.c-check-item:last-child{border-bottom:none}
+.c-check-item:hover{background:#F8F7F3}
+.c-check-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--primary);flex-shrink:0;cursor:pointer}
+.c-check-item.c-check-disabled{opacity:.55;cursor:default}
+.c-check-item.c-check-disabled:hover{background:inherit}
+.c-ci-body{flex:1;min-width:0}
+.c-ci-name{font-size:14px;font-weight:600;color:var(--ink)}
+.c-ci-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.c-ci-price{text-align:right;flex-shrink:0;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;color:var(--primary);line-height:1.2}
+.c-ci-unit{display:block;font-family:'Golos Text',sans-serif;font-size:11px;font-weight:400;color:var(--muted)}
+.c-result{margin-top:24px}
+.c-block{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.c-block-head{background:var(--primary);color:#fff;padding:12px 18px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;letter-spacing:.3px}
+.c-block-head.gold{background:#7A5308}
+.c-block-head.green{background:var(--green)}
+.c-block-head.ko{background:#CC0000}
+.c-rtable{width:100%;border-collapse:collapse}
+.c-rtable th{padding:8px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.6px;font-weight:700;color:#fff;text-align:right;background:var(--primary)}
+.c-rtable th:first-child{text-align:left}
+.c-rtable td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13.5px;vertical-align:middle;color:#2D3748}
+.c-rtable tr:last-child td{border-bottom:none}
+.c-rtable tr:nth-child(even) td{background:#FAFAF8}
+.c-rtable td.num{text-align:right;font-weight:600;color:var(--primary);white-space:nowrap}
+.c-rtable td.grn{text-align:right;font-weight:600;color:var(--green);white-space:nowrap}
+.c-rtable td.hint{font-size:11.5px;color:var(--muted)}
+.c-rtable tr.c-total td{background:var(--info-bg);font-weight:700;font-size:15px;border-top:2px solid var(--border)}
+.c-rtable tr.c-total.gold td{background:var(--warn-bg)}
+.c-rtable tr.c-total.green td{background:var(--succ-bg)}
+.c-rtable tr.c-total td.num{font-size:17px;color:var(--primary)}
+.c-rtable tr.c-total.gold td.num{color:#7A5308}
+.c-rtable tr.c-total.green td.num{color:var(--green)}
+.c-note-calc{background:var(--warn-bg);border-left:4px solid var(--amber);padding:10px 16px;font-size:13px;color:#7B5000;line-height:1.55}
+.c-note-green{background:var(--succ-bg);border-left:4px solid var(--green);padding:10px 16px;font-size:13px;color:#1A5C30;line-height:1.55}
+.fot-wrap{padding:0 14px 14px}
+.fot-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.fot-table th{padding:7px 12px;background:var(--primary);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:700;text-align:left}
+.fot-table th:not(:first-child){text-align:right}
+.fot-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:#2D3748}
+.fot-table td:not(:first-child){text-align:right;font-weight:600}
+.fot-table tr:last-child td{border-bottom:none}
+.fot-table .ft-total td{background:var(--warn-bg);font-weight:700;border-top:2px solid var(--border)}
+.fot-table .ft-green td{color:var(--green)}
+/* итого cards */
+.vtc-cards-result{display:flex;align-items:stretch;flex-wrap:wrap;gap:0}
+.vtcr{flex:1;min-width:140px;padding:14px 16px}
+.vtcr-gos{background:#FDF0EE;border:1.5px solid #F2C4BC}
+.vtcr-kom{background:var(--info-bg);border:1.5px solid #BDD0F0;border-left:none;border-right:none}
+.vtcr-tot{background:var(--primary);border:1.5px solid var(--primary)}
+.vtcr-plus{display:flex;align-items:center;padding:0 8px;font-size:20px;font-weight:700;color:var(--muted);flex-shrink:0}
+.vtcr-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.vtcr-gos .vtcr-lbl{color:#8B1A0A}
+.vtcr-kom .vtcr-lbl{color:var(--primary)}
+.vtcr-tot .vtcr-lbl{color:rgba(255,255,255,.7)}
+.vtcr-val{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;line-height:1.1}
+.vtcr-gos .vtcr-val{color:#8B1A0A}
+.vtcr-kom .vtcr-val{color:var(--primary)}
+.vtcr-tot .vtcr-val{color:#fff}
+.vtcr-hint{font-size:11px;margin-top:4px;line-height:1.4}
+.vtcr-gos .vtcr-hint{color:#B07070}
+.vtcr-kom .vtcr-hint{color:#7090C0}
+.vtcr-tot .vtcr-hint{color:rgba(255,255,255,.65)}
+/* vt-cards */
+.vt-cards{display:flex;align-items:stretch;gap:0;margin:12px 0 0}
+.vtc{padding:14px 18px;min-width:0}
+.vtc-gos{flex:1;background:#FDF0EE;border-radius:8px 0 0 8px;border:1.5px solid #F2C4BC;border-right:none}
+.vtc-kom{flex:1;background:var(--info-bg);border:1.5px solid #BDD0F0;border-left:none;border-right:none}
+.vtc-tot{flex:1;background:var(--primary);border-radius:0 8px 8px 0;border:1.5px solid var(--primary)}
+.vtc-plus{font-size:22px;font-weight:700;color:var(--muted);flex-shrink:0;display:flex;align-items:center;padding:0 6px}
+.vtc-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.vtc-gos .vtc-lbl{color:#8B1A0A}
+.vtc-kom .vtc-lbl{color:var(--primary)}
+.vtc-tot .vtc-lbl{color:rgba(255,255,255,.7)}
+.vtc-val{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;line-height:1.1}
+.vtc-gos .vtc-val{color:#8B1A0A}
+.vtc-kom .vtc-val{color:var(--primary)}
+.vtc-tot .vtc-val{color:#fff}
+.vtc-hint{font-size:11px;margin-top:5px;line-height:1.4}
+.vtc-gos .vtc-hint{color:#B07070}
+.vtc-kom .vtc-hint{color:#5070A0}
+.vtc-tot .vtc-hint{color:rgba(255,255,255,.6)}
+/* vt table */
+.vt{width:100%;border-collapse:collapse;font-size:14px}
+.vt thead th{background:var(--primary);color:#fff;padding:10px 12px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.vt thead th.vt-chk{width:36px}
+.vt thead th.vt-gos{text-align:right;color:#FFBBBB}
+.vt thead th.vt-kom{text-align:right}
+.vt thead th.vt-sum{text-align:right;background:#0E2550}
+.vt thead th.vt-unit{width:80px}
+.vt tbody tr{border-bottom:1px solid var(--border)}
+.vt tbody tr:nth-child(even) td{background:#FAFAF8}
+.vt tbody tr.vt-row:hover td{background:#F0F4FF}
+.vt tbody tr.vt-row:has(input:not(:checked)) td{opacity:.45}
+.vt-sub{font-size:12px;color:var(--muted);font-weight:400;margin-top:2px}
+.vt tbody td{padding:10px 12px;vertical-align:middle;color:#2D3748}
+.vt-chk input{width:17px;height:17px;accent-color:var(--primary);cursor:pointer;display:block}
+.vt-gos-v{text-align:right;font-weight:600;color:#8B1A0A;white-space:nowrap}
+.vt-kom-v{text-align:right;font-weight:600;color:var(--primary);white-space:nowrap}
+.vt-sum-v{text-align:right;font-weight:700;color:var(--primary);white-space:nowrap}
+.vt-u{text-align:right;font-size:12px;color:var(--muted);white-space:nowrap}
+.vt-group td{background:#EEF2FB;padding:7px 12px;font-size:11.5px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.8px;border-top:2px solid #C8D5EE}
+@media(max-width:800px){
+  .c-stab{font-size:12.5px;padding:9px 12px}
+  .c-toprow{flex-direction:column}
+  .c-toprow .c-field{min-width:100%}
+  .c-rtable th,.c-rtable td{padding:8px 10px;font-size:12.5px}
+  .c-rtable td.hint{display:none}
+  .c-ci-price{font-size:12px}
+  .c-ci-name{font-size:13px}
+}
+@media(max-width:700px){
+  .vt-cards,.vtc-cards-result{flex-direction:column;gap:8px}
+  .vtc-gos,.vtc-kom,.vtc-tot,.vtcr-gos,.vtcr-kom,.vtcr-tot{border-radius:8px!important;border:1.5px solid var(--border)!important;width:100%}
+  .vtc-tot,.vtcr-tot{background:var(--primary);border-color:var(--primary)!important}
+  .vtc-plus,.vtcr-plus{display:none}
+  .vt thead th.vt-unit,.vt tbody td.vt-u{display:none}
+  .vt{font-size:13px}
+  .vt tbody td,.vt thead th{padding:8px 8px}
+}
+</style>
+<script>
+const sectionLabels = {
+  home:'О компании', road:'Дорожные карты',
+  vizovye:'Визовый персонал', korea:'Северная Корея',
+  autstaffing:'Вывод за штат', sudy:'Нарушения и суды', kto:'Кто обращается',
+  calc:'Калькулятор КП'
+};
+
+function show(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(n=>{if((n.getAttribute('onclick')||'').includes(`'${id}'`))n.classList.add('active')});
+  var lbl = document.getElementById('topbar-section');
+  if(lbl) lbl.textContent = sectionLabels[id] || '';
+  window.scrollTo(0,0);
+  if(window.innerWidth <= 800) closeSidebar();
+}
+
+function rmTab(el,id){
+  document.querySelectorAll('.rm-tab').forEach(t=>t.classList.remove('active','ko'));
+  document.querySelectorAll('.rm-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  if(id==='rm-ko')el.classList.add('ko');
+  document.getElementById(id).classList.add('active');
+}
+
+function toggleSidebar(){
+  var sb=document.getElementById('sidebar'),ov=document.getElementById('overlay'),hb=document.getElementById('hamburger');
+  var open=sb.classList.toggle('open');
+  ov.classList.toggle('active',open);
+  hb.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar();});
+
+// ===== CALCULATOR =====
+let currentSvc='vizovye';
+
+function switchSvc(el,svc){
+  currentSvc=svc;
+  document.querySelectorAll('.c-stab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.c-params').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('p-'+svc).classList.add('active');
+  calc();
+}
+
+function updateVizTable(){
+  const rows=document.querySelectorAll('#p-vizovye .vt-row');
+  let gos=0,kom=0;
+  rows.forEach(row=>{
+    const cb=row.querySelector('input[type=checkbox]');
+    if(!cb||!cb.checked)return;
+    gos+=parseFloat(row.dataset.gos)||0;
+    kom+=parseFloat(row.dataset.kom)||0;
+  });
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('vt-gos-sum',gos?fmt(gos):'—');
+  set('vt-kom-sum',kom?fmt(kom):'—');
+  set('vt-sum-sum',fmt(gos+kom));
+}
+
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')+' ₽';}
+function fmtUSD(n){return '$\u202f'+Math.round(n).toLocaleString('ru-RU');}
+function chk(id){var el=document.getElementById(id);return el&&el.checked;}
+function val(id,def){var el=document.getElementById(id);return el?(parseFloat(el.value)||def):def;}
+
+function block(headText,headCls,inner,note,noteGreen){
+  return `<div class="c-block">
+    <div class="c-block-head${headCls?' '+headCls:''}">${headText}</div>
+    ${inner}
+    ${note?`<div class="c-note-calc">${note}</div>`:''}
+    ${noteGreen?`<div class="c-note-green">${noteGreen}</div>`:''}
+  </div>`;
+}
+
+function tbl(cols,rows){
+  var hd=cols.map((c,i)=>`<th${i>0?' style="text-align:right"':''}>${c}</th>`).join('');
+  var body=rows.map(r=>{
+    var tr_cls=r._cls||'';
+    var cells=cols.map((_,i)=>{
+      if(i===0)return `<td>${r[i]||''}</td>`;
+      var v=r[i]||'';
+      var td_cls=r._num&&i>0?(r._green?'grn':'num'):(r._free&&i>0?'grn':'');
+      return `<td class="${td_cls}">${v}</td>`;
+    }).join('');
+    return `<tr class="${tr_cls}">${cells}</tr>`;
+  }).join('');
+  return `<table class="c-rtable"><thead><tr>${hd}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function calc(){
+  const out=document.getElementById('c-result');
+  if(currentSvc==='vizovye') out.innerHTML=calcVizovye();
+  else if(currentSvc==='india') out.innerHTML=calcIndia();
+  else if(currentSvc==='korea') out.innerHTML=calcKorea();
+  else out.innerHTML=calcAutstaffing();
+  updateVizTable();
+}
+
+function calcVizovye(){
+  const n=Math.max(1,val('v-count',5));
+  const oklad=Math.max(30000,val('v-oklad',80500));
+
+  // Режим «Только квоты»
+  if(vizMode['v'] === 'kvoty'){
+    const d = Math.max(1, val('v-dolzhnosti',1));
+    return `<div class="c-block">
+      <div class="c-block-head">📑 ТОЛЬКО КВОТЫ</div>
+      <div style="padding:14px 16px 4px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <label style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">Кол-во должностей</label>
+        <input class="c-input" type="number" id="v-dolzhnosti" min="1" max="50" value="${d}" oninput="calc()" style="width:100px">
+        <span style="font-size:12px;color:var(--muted)">1 должность = 1 заявка = 50 000 ₽</span>
+      </div>
+      <table class="c-rtable"><thead><tr><th>Услуга</th><th style="text-align:right">1 должность</th><th style="text-align:right">${d} должн.</th></tr></thead>
+      <tbody>
+        <tr><td>Подача на квоты<div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6">
+          1. Размещение вакансии на Работа России<br>
+          2. Размещение вакансии в центре занятости<br>
+          3. Подача заявки в Комитет по труду региона<br>
+          4. Консолидация заявок с регионов в Министерство труда<br>
+          5. Составление и выпуск приказа Минтрудом
+        </div></td><td class="num">50 000 ₽</td><td class="num">${fmt(50000*d)}</td></tr>
+        <tr class="c-total"><td><b>ИТОГО</b></td><td class="num"><b>50 000 ₽</b></td><td class="num"><b>${fmt(50000*d)}</b></td></tr>
+      </tbody></table>
+      <div class="c-note-calc">Одна должность = одна заявка. Количество людей на стоимость не влияет. Срок: 3–4 месяца.</div>
+    </div>`;
+  }
+
+  // Режим «Только привоз»
+  if(vizMode['v'] === 'privoz'){
+    return `<div class="c-block">
+      <div class="c-block-head">✈️ ТОЛЬКО ПРИВОЗ</div>
+      <table class="c-rtable"><thead><tr><th>Услуга</th><th style="text-align:right">1 чел.</th><th style="text-align:right">${n} чел.</th></tr></thead>
+      <tbody>
+        <tr><td>Подбор, перелёт, встреча, доставка до места проживания</td><td class="num">15 000 ₽</td><td class="num">${fmt(15000*n)}</td></tr>
+        <tr class="c-total green"><td><b>ИТОГО</b></td><td class="num"><b>15 000 ₽</b></td><td class="num"><b>${fmt(15000*n)}</b></td></tr>
+      </tbody></table>
+      <div class="c-note-green">Замена сотрудника при необходимости. Миграционное оформление не входит — рассчитывается отдельно.</div>
+    </div>`;
+  }
+  const svc=[
+    {id:'v-kvoty',gos:0,kom:5000,pp:true,per1:5000},
+    {id:'v-rnp',gos:12000,kom:5000,pp:true,per1:17000},
+    {id:'v-rnr',gos:4200,kom:5000,pp:true,per1:9200},
+    {id:'v-invite',gos:960,kom:5000,pp:true,per1:5960},
+    {id:'v-prolong',gos:1200,kom:5000,pp:true,per1:6200},
+    {id:'v-docs',gos:0,kom:15000,pp:true,per1:15000},
+    {id:'v-notify',gos:0,kom:3000,pp:true,per1:3000},
+    {id:'v-snils',gos:0,kom:1500,pp:true,per1:1500},
+  ];
+  const dolzh_v = Math.max(1, val('v-dolzhnosti', 1));
+  let gosTotal=0,komTotal=0,razovyeTotal=0;
+  svc.forEach(s=>{
+    if(!chk(s.id))return;
+
+    const total=s.pp?s.per1*n:s.per1;
+    razovyeTotal+=total;
+    if(s.pp){gosTotal+=s.gos*n;komTotal+=s.kom*n;}
+    else{komTotal+=s.kom;}
+  });
+  const b1=`<div class="c-block">
+    <div class="c-block-head">📋 РАЗОВЫЕ РАСХОДЫ — ИТОГО</div>
+    <div class="vtc-cards-result">
+      <div class="vtcr vtcr-gos"><div class="vtcr-lbl">Госпошлины</div><div class="vtcr-val">${gosTotal?fmt(gosTotal):'—'}</div><div class="vtcr-hint">фиксированы государством<br>не возвращаются при отказе</div></div>
+      <div class="vtcr-plus">+</div>
+      <div class="vtcr vtcr-kom"><div class="vtcr-lbl">Услуги Авагар</div><div class="vtcr-val">${komTotal?fmt(komTotal):'—'}</div><div class="vtcr-hint">оформление документов, сопровождение</div></div>
+      <div class="vtcr-plus">=</div>
+      <div class="vtcr vtcr-tot"><div class="vtcr-lbl">ИТОГО на 1 чел.</div><div class="vtcr-val">${fmt(razovyeTotal/Math.max(1,n))}</div><div class="vtcr-hint">× ${n} чел. = ${fmt(razovyeTotal)}</div></div>
+    </div>
+    <div class="c-note-green">Авиабилеты, консульский сбор, подбор, обучение РЯ, медицина за рубежом — за счёт Авагар. 🇧🇩 По Бангладеш возможна рассрочка: 4 равных платежа после выхода сотрудника.</div>
+  </div>`;
+  const sv=Math.round(oklad*0.309);
+  const ndfl13=Math.round(oklad*0.13),ndfl30=Math.round(oklad*0.30);
+  const ruki13=oklad-ndfl13,ruki30=oklad-ndfl30;
+  const itog=oklad+sv;
+  let monthLines='',monthTotal=0;
+  if(chk('v-abonement')){monthLines+=`<tr><td>Абонентское сопровождение (вкл. НДС 22%)</td><td>${fmt(10000)}</td><td>${fmt(10000*n)}</td></tr>`;monthTotal+=10000*n;}
+  if(chk('v-trans-check')){const h=Math.max(1,val('v-hours',20)),t=2000*h;monthLines+=`<tr><td>Переводчик (${h} ч × 2 000 ₽)</td><td>${fmt(2000*h/h)}/ч</td><td>${fmt(t)}</td></tr>`;monthTotal+=t;}
+  if(chk('v-brigadir')){monthLines+=`<tr><td>Бригадир-переводчик</td><td>= ЗП</td><td>${fmt(oklad)}</td></tr>`;monthTotal+=oklad;}
+  const b2=`<div class="c-block">
+    <div class="c-block-head gold">📅 ЕЖЕМЕСЯЧНЫЕ РАСХОДЫ</div>
+    <div class="fot-wrap">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">ФОТ на 1 сотрудника (оклад ${fmt(oklad)})</div>
+      <table class="fot-table">
+        <thead><tr><th>Статья</th><th>Мес. 1–6 (НДФЛ 30%)</th><th>Мес. 7+ (НДФЛ 13%)</th></tr></thead>
+        <tbody>
+          <tr><td>Оклад (gross)</td><td>${fmt(oklad)}</td><td>${fmt(oklad)}</td></tr>
+          <tr><td>НДФЛ</td><td>${fmt(ndfl30)}</td><td>${fmt(ndfl13)}</td></tr>
+          <tr class="ft-green"><td>На руки</td><td>${fmt(ruki30)}</td><td>${fmt(ruki13)}</td></tr>
+          <tr><td>Страховые взносы (30,9%)</td><td>${fmt(sv)}</td><td>${fmt(sv)}</td></tr>
+          <tr class="ft-total"><td><b>Итого затрат/чел.</b></td><td><b>${fmt(itog)}</b></td><td><b>${fmt(itog)}</b></td></tr>
+          ${n>1?`<tr class="ft-total"><td><b>Итого × ${n} чел.</b></td><td><b>${fmt(itog*n)}</b></td><td><b>${fmt(itog*n)}</b></td></tr>`:''}
+        </tbody>
+      </table>
+      ${monthLines?`<div style="margin-top:12px"><table class="fot-table"><thead><tr><th>Доп. услуги</th><th>1 чел.</th><th>${n>1?n+' чел.':''}</th></tr></thead><tbody>${monthLines}<tr class="ft-total"><td><b>Итого доп. услуги</b></td><td></td><td><b>${fmt(monthTotal)}</b></td></tr></tbody></table></div>`:''}
+    </div>
+    <div class="c-note-calc">⚠️ Первые 6 месяцев НДФЛ 30% (нерезиденты): на руки ${fmt(ruki30)}. С 7-го месяца — 13%: на руки ${fmt(ruki13)}. Затраты работодателя одинаковы в оба периода.</div>
+  </div>`;
+  const b3=`<div class="c-block"><div class="c-block-head" style="background:#374151">🏠 НА ЗАКАЗЧИКЕ</div><div style="padding:12px 16px;font-size:14px;color:#2D3748;line-height:1.7">Жильё и питание — организует заказчик.<br>Авагар встречает сотрудников в аэропорту и довозит до места проживания.</div></div>`;
+  return b1+b2+b3;
+}
+
+function calcIndia(){
+  const n=Math.max(1,val('i-count',5));
+  const oklad=Math.max(30000,val('i-oklad',80500));
+
+  // Режим «Только квоты»
+  if(vizMode['i'] === 'kvoty'){
+    const d = Math.max(1, val('i-dolzhnosti',1));
+    return `<div class="c-block">
+      <div class="c-block-head">📑 ТОЛЬКО КВОТЫ</div>
+      <div style="padding:14px 16px 4px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <label style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">Кол-во должностей</label>
+        <input class="c-input" type="number" id="i-dolzhnosti" min="1" max="50" value="${d}" oninput="calc()" style="width:100px">
+        <span style="font-size:12px;color:var(--muted)">1 должность = 1 заявка = 50 000 ₽</span>
+      </div>
+      <table class="c-rtable"><thead><tr><th>Услуга</th><th style="text-align:right">1 должность</th><th style="text-align:right">${d} должн.</th></tr></thead>
+      <tbody>
+        <tr><td>Подача на квоты<div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.6">
+          1. Размещение вакансии на Работа России<br>
+          2. Размещение вакансии в центре занятости<br>
+          3. Подача заявки в Комитет по труду региона<br>
+          4. Консолидация заявок с регионов в Министерство труда<br>
+          5. Составление и выпуск приказа Минтрудом
+        </div></td><td class="num">50 000 ₽</td><td class="num">${fmt(50000*d)}</td></tr>
+        <tr class="c-total"><td><b>ИТОГО</b></td><td class="num"><b>50 000 ₽</b></td><td class="num"><b>${fmt(50000*d)}</b></td></tr>
+      </tbody></table>
+      <div class="c-note-calc">Одна должность = одна заявка. Количество людей на стоимость не влияет. Срок: 3–4 месяца.</div>
+    </div>`;
+  }
+
+  // Режим «Только привоз»
+  if(vizMode['i'] === 'privoz'){
+    return `<div class="c-block">
+      <div class="c-block-head">✈️ ТОЛЬКО ПРИВОЗ</div>
+      <table class="c-rtable"><thead><tr><th>Услуга</th><th style="text-align:right">1 чел.</th><th style="text-align:right">${n} чел.</th></tr></thead>
+      <tbody>
+        <tr><td>Подбор, перелёт, встреча, доставка до места проживания</td><td class="num">15 000 ₽</td><td class="num">${fmt(15000*n)}</td></tr>
+        <tr class="c-total green"><td><b>ИТОГО</b></td><td class="num"><b>15 000 ₽</b></td><td class="num"><b>${fmt(15000*n)}</b></td></tr>
+      </tbody></table>
+      <div class="c-note-green">Замена сотрудника при необходимости. Миграционное оформление не входит — рассчитывается отдельно.</div>
+    </div>`;
+  }
+
+  const svcList=[
+    {id:'i-kvoty',per1:5000,pp:true,label:'Подача на квоты'},
+    {id:'i-rnp',per1:17000,pp:true,label:'Разрешение на привлечение (РнП)'},
+    {id:'i-rnr',per1:9200,pp:true,label:'Разрешение на работу (РнР)'},
+    {id:'i-invite',per1:5960,pp:true,label:'Приглашение на въезд'},
+    {id:'i-prolong',per1:6200,pp:true,label:'Продление визы до 1 года'},
+    {id:'i-docs',per1:15000,pp:true,label:'Медкомиссия, дакто, фото, ДМС, перевод'},
+    {id:'i-notify',per1:3000,pp:true,label:'Уведомление МВД о трудовом договоре'},
+    {id:'i-snils',per1:1500,pp:true,label:'Госуслуги / карта / сим'},
+  ];
+  const dolzh_i = Math.max(1, val('i-dolzhnosti', 1));
+  let razovyeTotal=0,r1rows=[];
+  svcList.forEach(s=>{
+    if(!chk(s.id))return;
+
+    const total=s.pp?s.per1*n:s.per1;
+    razovyeTotal+=total;
+    r1rows.push({0:s.label,1:s.pp?fmt(s.per1)+'/чел.':fmt(s.per1),2:n>1?fmt(total):'',_num:true});
+  });
+  r1rows.push({0:'<b>ИТОГО разовые</b>',1:'',2:`<b>${fmt(razovyeTotal)}</b>`,_cls:'c-total'});
+  const r1html=r1rows.length>1?tbl(n>1?['Услуга','1 чел.',n+' чел.']:['Услуга','Стоимость',''],r1rows):'<div style="padding:16px 14px;color:var(--muted)">Не выбрана ни одна услуга</div>';
+  const b1=block('📋 РАЗОВЫЕ РАСХОДЫ НА ОФОРМЛЕНИЕ','',r1html,'Авиабилеты и условия встречи — уточняются отдельно. Рассрочка по Индии не предусмотрена.');
+  const sv=Math.round(oklad*0.309);
+  const ndfl13=Math.round(oklad*0.13),ndfl30=Math.round(oklad*0.30);
+  const ruki13=oklad-ndfl13,ruki30=oklad-ndfl30;
+  const itog=oklad+sv;
+  let monthRows=[],monthTotal=0;
+  if(chk('i-abonement')){monthRows.push({name:'Абонентское сопровождение (вкл.НДС)',per1:fmt(10000),total:fmt(10000*n)});monthTotal+=10000*n;}
+  if(chk('i-trans-check')){const h=Math.max(1,val('i-hours',20)),t=2000*h;monthRows.push({name:`Переводчик (${h} ч × 2 000 ₽)`,per1:fmt(2000*h/h)+'/ч',total:fmt(t)});monthTotal+=t;}
+  if(chk('i-brigadir')){monthRows.push({name:'Бригадир-переводчик',per1:'= ЗП',total:fmt(oklad)});monthTotal+=oklad;}
+  const fotHtml=`<div class="fot-wrap"><table class="fot-table"><thead><tr><th>Статья</th><th>Мес. 1–6 (НДФЛ 30%)</th><th>Мес. 7+ (НДФЛ 13%)</th></tr></thead><tbody>
+    <tr><td>Оклад (gross)</td><td>${fmt(oklad)}</td><td>${fmt(oklad)}</td></tr>
+    <tr><td>НДФЛ</td><td>${fmt(ndfl30)}</td><td>${fmt(ndfl13)}</td></tr>
+    <tr class="ft-green"><td>На руки</td><td>${fmt(ruki30)}</td><td>${fmt(ruki13)}</td></tr>
+    <tr><td>Страховые взносы (30,9%)</td><td>${fmt(sv)}</td><td>${fmt(sv)}</td></tr>
+    <tr class="ft-total"><td><b>Итого затрат/чел.</b></td><td><b>${fmt(itog)}</b></td><td><b>${fmt(itog)}</b></td></tr>
+    ${n>1?`<tr class="ft-total"><td><b>Итого × ${n} чел.</b></td><td><b>${fmt(itog*n)}</b></td><td><b>${fmt(itog*n)}</b></td></tr>`:''}
+  </tbody></table></div>`;
+  const b2=block('📅 ЕЖЕМЕСЯЧНЫЕ РАСХОДЫ','gold',fotHtml,'⚠️ Первые 6 месяцев НДФЛ 30% (нерезиденты). С 7-го месяца — 13%. Затраты работодателя одинаковы в оба периода.');
+  return b1+b2;
+}
+
+function calcKorea(){
+  const n=Math.max(1,val('k-count',10));
+  const usd=val('k-usd',90);
+  const sal=val('k-sal',120000);
+  const hasTrans=chk('k-translator');
+  const hasCook=chk('k-cook');
+  const advance=1700*usd*n;
+  const centerComm=Math.round(sal*0.087);
+  const avagarComm=3500;
+  const crewCount=1+(hasTrans?1:0)+(hasCook?1:0);
+  const crewTotal=sal*crewCount;
+  const itog1=sal+centerComm+avagarComm;
+  const itogN=itog1*n+crewTotal;
+  const crewLine=['Бригадир (всегда)',hasTrans?'Переводчик':null,hasCook?'Повар':null].filter(Boolean).join(' + ');
+  const r1=`<table class="c-rtable"><thead><tr><th>Статья</th><th style="text-align:right">1 чел.</th><th style="text-align:right">${n} чел.</th></tr></thead><tbody>
+    <tr><td>Аванс 1 700 USD</td><td class="num">${fmtUSD(1700)} = ${fmt(1700*usd)}</td><td class="num">${fmtUSD(1700*n)} = ${fmt(advance)}</td></tr>
+    <tr class="c-total"><td><b>ИТОГО аванс</b></td><td></td><td class="num"><b>${fmt(advance)}</b></td></tr>
+  </tbody></table>`;
+  const r2=`<table class="c-rtable"><thead><tr><th>Статья</th><th style="text-align:right">1 чел.</th><th style="text-align:right">${n} чел. + сопр.</th></tr></thead><tbody>
+    <tr><td>Заработная плата</td><td class="num">${fmt(sal)}</td><td class="num">${fmt(sal*n)}</td></tr>
+    <tr><td>Комиссия учебному центру (8,7%)</td><td class="num">${fmt(centerComm)}</td><td class="num">${fmt(centerComm*n)}</td></tr>
+    <tr><td>Комиссия Авагар</td><td class="num">${fmt(avagarComm)}</td><td class="num">${fmt(avagarComm*n)}</td></tr>
+    <tr><td>${crewLine} (${crewCount} чел.)</td><td class="num">${fmt(sal)}/чел.</td><td class="num">${fmt(crewTotal)}</td></tr>
+    <tr class="c-total gold"><td><b>ИТОГО/мес.</b></td><td class="num"><b>${fmt(itog1)}</b></td><td class="num"><b>${fmt(itogN)}</b></td></tr>
+  </tbody></table>`;
+  const b1=block('💰 РАЗОВАЯ ОПЛАТА (АВАНС)','ko',r1,'⚠️ После оплаты аванса начинается подбор. Правительство КНДР проверит компанию: 3+ лет, нет долгов, нет банкротства.');
+  const b2=block('📅 ЕЖЕМЕСЯЧНЫЕ РАСХОДЫ','ko',r2,crewCount<3?'При 100+ сотрудниках обязательны переводчик и повар — добавьте их выше.':'');
+  const b3=block('🏠 НА ЗАКАЗЧИКЕ','','<div style="padding:12px 16px;font-size:14px;color:#2D3748">Проживание — только общежитие (бытовки недопустимы). Питание — на заказчике.</div>');
+  return b1+b2+b3;
+}
+
+function calcAutstaffing(){
+  const n=Math.max(1,val('a-count',5));
+  const oklad=val('a-oklad',27093);
+  const regNeeded=chk('a-reg');
+  const hasPatent=chk('a-patent');
+  const hasCert=chk('a-cert');
+  const hasDakto=chk('a-dakto');
+  let komissia;
+  if(n<=5)komissia=6000;
+  else if(n<=10)komissia=5000;
+  else if(n<=30)komissia=4500;
+  else komissia=4000;
+  const ndfl=Math.round(oklad*0.13);
+  const naRuki=oklad-ndfl;
+  const sv=Math.round(oklad*0.30);
+  const ns=Math.round(oklad*0.002);
+  const base1=oklad+sv+ns+komissia;
+  const nds1=Math.round(base1*0.22);
+  const itog1=base1+nds1;
+  const itogN=itog1*n+(regNeeded?7000*n:0);
+
+  // Разовые
+  let razovyeRows=[], razovyeTotal=0;
+  if(hasPatent){
+    razovyeRows.push({0:'Оформление патента (нал)',1:'47 000 ₽',2:fmt(47000*n),_num:true});
+    razovyeTotal+=47000*n; // нал как базовый
+  }
+  if(hasCert){razovyeRows.push({0:'Сертификат русского языка',1:'4 000 ₽',2:fmt(4000*n),_num:true});razovyeTotal+=4000*n;}
+  if(hasDakto){razovyeRows.push({0:'Дактилоскопия + фото',1:'до 2 000 ₽',2:'до '+fmt(2000*n),_num:true});razovyeTotal+=2000*n;}
+
+  const razovyeBlock = razovyeRows.length ? `<div class="c-block">
+    <div class="c-block-head" style="background:#374151">💳 РАЗОВЫЕ РАСХОДЫ</div>
+    ${tbl(['Услуга','1 чел.', n+' чел.'], [...razovyeRows, {0:'<b>ИТОГО разовые</b>',1:'',2:`<b>${fmt(razovyeTotal)}</b>`,_cls:'c-total'}])}
+    <div class="c-note-calc">Патент: нал 47 000 ₽ / безнал 50 500 ₽. Сертификат — только наличными.</div>
+  </div>` : '';
+
+  const r1=`<table class="c-rtable"><thead><tr><th>Статья</th><th style="text-align:right">1 чел.</th><th style="text-align:right">${n} чел.</th></tr></thead><tbody>
+    <tr><td>Оклад (gross)</td><td class="num">${fmt(oklad)}</td><td class="num">${fmt(oklad*n)}</td></tr>
+    <tr><td>НДФЛ (13%)</td><td class="num">${fmt(ndfl)}</td><td class="num">${fmt(ndfl*n)}</td></tr>
+    <tr><td style="color:var(--green);font-weight:600">На руки</td><td class="grn">${fmt(naRuki)}</td><td class="grn">${fmt(naRuki*n)}</td></tr>
+    <tr><td>Страховые взносы (30%)</td><td class="num">${fmt(sv)}</td><td class="num">${fmt(sv*n)}</td></tr>
+    <tr><td>Взносы по НС (0,2% — базовый тариф)</td><td class="num">${fmt(ns)}</td><td class="num">${fmt(ns*n)}</td></tr>
+    <tr><td>Комиссия Авагар<span style="font-size:11px;color:var(--muted);display:block">${n<=5?'до 5 чел.':n<=10?'до 10 чел.':n<=30?'11–30 чел.':'31+ чел.'} → ${fmt(komissia)}/чел.</span></td><td class="num">${fmt(komissia)}</td><td class="num">${fmt(komissia*n)}</td></tr>
+    <tr><td>НДС 22%</td><td class="num">${fmt(nds1)}</td><td class="num">${fmt(nds1*n)}</td></tr>
+    ${regNeeded?`<tr><td>Миграционный учёт — 7 000 ₽/чел.<span style="font-size:11px;color:var(--muted);display:block">Срок = оплаченным патентным чекам иностранца</span></td><td class="num">7 000 ₽</td><td class="num">${fmt(7000*n)}</td></tr>`:''}
+    <tr class="c-total green"><td><b>ИТОГО в месяц (с НДС 22%)</b></td><td class="num"><b>${fmt(itog1)}</b></td><td class="num"><b>${fmt(itogN)}</b></td></tr>
+    <tr><td style="color:var(--green)">В т.ч. на руки сотрудникам</td><td class="grn">${fmt(naRuki)}</td><td class="grn">${fmt(naRuki*n)}</td></tr>
+  </tbody></table>`;
+
+  const note=`Комиссия по фактически оформленным. Текущая ставка: ${fmt(komissia)}/чел./мес. НДС 22% на ФОТ + взносы + комиссию.${regNeeded?' Миграционный учёт — только если у заказчика есть собственность, сдаваемая Авагар по договору аренды.':''}`;
+  return razovyeBlock+block('📅 ЕЖЕМЕСЯЧНЫЙ ПЛАТЁЖ КЛИЕНТА','green',r1,note);
+}
+
+
+
+
+// ===== РЕЖИМ ПРИВОЗ =====
+const vizMode = {v: 'full', i: 'full'};
+
+function setVizMode(mode, pfx){
+  vizMode[pfx] = mode;
+  const fullBlock   = document.getElementById(pfx+'-full-block');
+  const privozBlock = document.getElementById(pfx+'-privoz-block');
+  const btnFull   = document.getElementById(pfx+'-mode-full');
+  const btnKvoty  = document.getElementById(pfx+'-mode-kvoty');
+  const btnPrivoz = document.getElementById(pfx+'-mode-privoz');
+
+  // reset all
+  [btnFull, btnKvoty, btnPrivoz].forEach(b=>{ if(b){ b.style.background='transparent'; b.style.color='var(--muted)'; }});
+  fullBlock.style.display = 'none';
+  privozBlock.style.display = 'none';
+
+  const monthlyBlock = document.getElementById(pfx+'-monthly-block');
+
+  if(mode === 'full'){
+    fullBlock.style.display = 'block';
+    if(monthlyBlock) monthlyBlock.style.display = 'block';
+    btnFull.style.background = 'var(--primary)'; btnFull.style.color = '#fff';
+  } else if(mode === 'kvoty'){
+    if(monthlyBlock) monthlyBlock.style.display = 'none';
+    btnKvoty.style.background = 'var(--primary)'; btnKvoty.style.color = '#fff';
+  } else {
+    privozBlock.style.display = 'block';
+    if(monthlyBlock) monthlyBlock.style.display = 'none';
+    btnPrivoz.style.background = 'var(--primary)'; btnPrivoz.style.color = '#fff';
+  }
+  calc();
+}
+
+// ===== КП ГЕНЕРАТОР =====
+function openKP(){
+  calc();
+  const html = buildKP();
+  document.getElementById('kp-content').innerHTML = html;
+  document.getElementById('kp-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+function closeKP(){
+  document.getElementById('kp-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeKP(); });
+
+async function copyKP(){
+  const html = document.getElementById('kp-content').innerHTML;
+  const btn = document.getElementById('kp-copy-btn');
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'text/html': new Blob([html], {type:'text/html'}), 'text/plain': new Blob([document.getElementById('kp-content').innerText], {type:'text/plain'}) })
+    ]);
+    btn.textContent = '✅ Скопировано!';
+    setTimeout(()=>{ btn.innerHTML = '📋 Скопировать'; }, 2500);
+  } catch(e) {
+    // fallback
+    const sel = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(document.getElementById('kp-content'));
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand('copy');
+    sel.removeAllRanges();
+    btn.textContent = '✅ Скопировано!';
+    setTimeout(()=>{ btn.innerHTML = '📋 Скопировать'; }, 2500);
+  }
+}
+
+function kpFmt(n){ return Math.round(n).toLocaleString('ru-RU') + ' ₽'; }
+
+function tdS(val, opts={}){
+  const align = opts.right ? 'text-align:right' : '';
+  const bold = opts.bold ? 'font-weight:bold' : '';
+  const bg = opts.bg ? `background:${opts.bg}` : '';
+  const style = [align,bold,bg].filter(Boolean).join(';');
+  return `<td style="border:1px solid #ccc;padding:7px 10px;${style}">${val}</td>`;
+}
+function trKP(cells){ return `<tr>${cells.join('')}</tr>`; }
+
+function buildKP(){
+  const client = document.getElementById('kp-client').value.trim() || 'Уважаемые партнёры';
+  const svc = currentSvc;
+
+  const tbStyle = 'width:100%;border-collapse:collapse;margin:12px 0;font-size:13px';
+  const thStyle = 'background:#1A3A6B;color:#fff;padding:8px 10px;border:1px solid #1A3A6B;font-weight:bold';
+
+  // Shared header
+  const header = `
+<div style="border-bottom:3px solid #1A3A6B;padding-bottom:14px;margin-bottom:20px">
+  <div style="font-size:22px;font-weight:bold;color:#1A3A6B;font-family:Arial,sans-serif">ЧАЗ АВАГАР ГРУПП</div>
+  <div style="font-size:12px;color:#666;margin-top:4px">тел.: 8(804)700-29-77 &nbsp;|&nbsp; info@avagar.ru &nbsp;|&nbsp; avagargroup.ru</div>
+  <div style="font-size:12px;color:#666">Санкт-Петербург, ул. Звенигородская 1/2, БЦ Звенигородский, оф. 507</div>
+</div>
+<h2 style="font-size:16px;font-weight:bold;margin:0 0 6px">Коммерческое предложение</h2>
+<p style="margin:0 0 16px;font-size:13px"><strong>${client}</strong></p>`;
+
+  if(svc === 'vizovye' || svc === 'india'){
+    return buildKP_Vizovye(header, tbStyle, thStyle, svc);
+  } else if(svc === 'korea'){
+    return buildKP_Korea(header, tbStyle, thStyle);
+  } else {
+    return buildKP_Autstaffing(header, tbStyle, thStyle);
+  }
+}
+
+function buildKP_Vizovye(header, tbStyle, thStyle, svc){
+  const n = Math.max(1, val(svc==='vizovye'?'v-count':'i-count', 5));
+  const oklad = Math.max(30000, val(svc==='vizovye'?'v-oklad':'i-oklad', 80500));
+  const country = svc==='vizovye' ? 'Бангладеш' : 'Индии';
+  const flag = svc==='vizovye' ? '🇧🇩' : '🇮🇳';
+
+  // one-time costs
+  const pfx = svc==='vizovye' ? 'v' : 'i';
+  const items = [
+    {id:`${pfx}-kvoty`,  label:'Подача на квоты', gos:0, kom:5000, pp:true},
+    {id:`${pfx}-rnp`,    label:'Разрешение на привлечение (РнП) — МВД, 30 раб. дней',         gos:12000, kom:5000,  pp:true},
+    {id:`${pfx}-rnr`,    label:'Разрешение на работу (РнР) — МВД, 15 кал. дней',              gos:4200,  kom:5000,  pp:true},
+    {id:`${pfx}-invite`, label:'Приглашение на въезд (параллельно с РнР)',                     gos:960,   kom:5000,  pp:true},
+    {id:`${pfx}-prolong`,label:'Продление визы до 1 года (после получения РнР)',                gos:1200,  kom:5000,  pp:true},
+    {id:`${pfx}-docs`,   label:'Медкомиссия, дактилоскопия, фото, ДМС, нотар. перевод',       gos:0,     kom:15000, pp:true},
+    {id:`${pfx}-notify`, label:'Уведомление МВД о заключении трудового договора',              gos:0,     kom:3000,  pp:true},
+    {id:`${pfx}-snils`,  label:'Госуслуги, банковская карта, сим-карта',                       gos:0,     kom:1500,  pp:true},
+  ];
+
+  const dolzh_kp = Math.max(1, val(svc==='vizovye'?'v-dolzhnosti':'i-dolzhnosti', 1));
+  let gosTotal=0, komTotal=0;
+  let rows1 = items.filter(s=>chk(s.id)).map(s=>{
+
+    const g = s.pp ? s.gos*n : 0;
+    const k = s.pp ? s.kom*n : s.kom;
+    gosTotal += g; komTotal += k;
+    const total = g + k;
+    return trKP([
+      tdS(s.label),
+      tdS(s.pp ? kpFmt(s.gos+s.kom)+'/чел.' : kpFmt(s.kom), {right:true}),
+      tdS(n>1 ? kpFmt(total) : '', {right:true}),
+    ]);
+  });
+  const itogRaz = gosTotal + komTotal;
+
+  const razTable = `<table style="${tbStyle}">
+    <thead><tr>
+      <th style="${thStyle};width:55%">Услуга</th>
+      <th style="${thStyle};text-align:right">1 чел.</th>
+      ${n>1?'<th style="'+thStyle+';text-align:right">'+n+' чел.</th>':''}
+    </tr></thead>
+    <tbody>${rows1.join('')}
+    <tr style="background:#EEF3FB;font-weight:bold">
+      ${tdS('<strong>ИТОГО разовые расходы</strong>',{bold:true,bg:'#EEF3FB'})}
+      ${tdS('',{right:true})}
+      ${n>1?tdS('<strong>'+kpFmt(itogRaz)+'</strong>',{right:true,bold:true,bg:'#EEF3FB'}):''}
+    </tr>
+    </tbody></table>`;
+
+  // monthly
+  const sv = Math.round(oklad*0.309);
+  const ndfl13=Math.round(oklad*0.13), ndfl30=Math.round(oklad*0.30);
+  const ruki13=oklad-ndfl13, ruki30=oklad-ndfl30;
+  const itogFot = oklad+sv;
+
+  const hasAbon = chk(`${pfx}-abonement`);
+  const hasTrans = chk(`${pfx}-trans-check`);
+  const hasBrig = chk(`${pfx}-brigadir`);
+  const hours = Math.max(1,val(`${pfx}-hours`,20));
+
+  const fotTable = `<table style="${tbStyle}">
+    <thead><tr>
+      <th style="${thStyle};width:55%">Статья</th>
+      <th style="${thStyle};text-align:right">Мес. 1–6 (НДФЛ 30%)</th>
+      <th style="${thStyle};text-align:right">Мес. 7+ (НДФЛ 13%)</th>
+    </tr></thead>
+    <tbody>
+    ${trKP([tdS('Оклад (gross)'),tdS(kpFmt(oklad),{right:true}),tdS(kpFmt(oklad),{right:true})])}
+    ${trKP([tdS('НДФЛ'),tdS(kpFmt(ndfl30),{right:true}),tdS(kpFmt(ndfl13),{right:true})])}
+    ${trKP([tdS('<span style="color:#2A7D4F;font-weight:600">На руки сотруднику</span>'),tdS('<span style="color:#2A7D4F;font-weight:600">'+kpFmt(ruki30)+'</span>',{right:true}),tdS('<span style="color:#2A7D4F;font-weight:600">'+kpFmt(ruki13)+'</span>',{right:true})])}
+    ${trKP([tdS('Страховые взносы (30,9%)'),tdS(kpFmt(sv),{right:true}),tdS(kpFmt(sv),{right:true})])}
+    ${trKP([tdS('<strong>ИТОГО затрат на работодателя / чел.</strong>'),tdS('<strong>'+kpFmt(itogFot)+'</strong>',{right:true,bold:true,bg:'#FFF4E0'}),tdS('<strong>'+kpFmt(itogFot)+'</strong>',{right:true,bold:true,bg:'#FFF4E0'})])}
+    ${n>1?trKP([tdS('<strong>ИТОГО × '+n+' чел.</strong>'),tdS('<strong>'+kpFmt(itogFot*n)+'</strong>',{right:true,bold:true,bg:'#FFF4E0'}),tdS('<strong>'+kpFmt(itogFot*n)+'</strong>',{right:true,bold:true,bg:'#FFF4E0'})]):''}
+    </tbody></table>`;
+
+  let extraRows = '';
+  if(hasAbon) extraRows += trKP([tdS('Абонентское сопровождение (миграционный контроль, сроки документов) вкл. НДС 22%'),tdS(kpFmt(10000),{right:true}),tdS(kpFmt(10000*n),{right:true})]);
+  if(hasTrans) extraRows += trKP([tdS(`Переводчик (${hours} ч × 2 000 ₽)`),tdS(kpFmt(2000)+'/ч',{right:true}),tdS(kpFmt(2000*hours),{right:true})]);
+  if(hasBrig) extraRows += trKP([tdS('Бригадир-переводчик (постоянный на объекте)'),tdS('= ЗП рядового',{right:true}),tdS(kpFmt(oklad),{right:true})]);
+
+  const extraTable = extraRows ? `<h3 style="font-size:13px;font-weight:bold;margin:16px 0 6px">Дополнительные ежемесячные услуги</h3>
+    <table style="${tbStyle}"><thead><tr>
+      <th style="${thStyle};width:55%">Услуга</th>
+      <th style="${thStyle};text-align:right">1 чел.</th>
+      <th style="${thStyle};text-align:right">${n} чел.</th>
+    </tr></thead><tbody>${extraRows}</tbody></table>` : '';
+
+  const note_rass = svc==='vizovye' ? '<p style="margin:12px 0;padding:10px;background:#EDF7F1;border-left:4px solid #2A7D4F;font-size:12.5px">🇧🇩 По Бангладеш возможна рассрочка: 4 равных платежа после выхода сотрудника на работу.</p>' : '<p style="margin:12px 0;padding:10px;background:#FFF4E0;border-left:4px solid #B07B10;font-size:12.5px">⚠ По Индии рассрочка не предусмотрена. Авиабилеты и условия встречи — уточняются отдельно.</p>';
+
+  return header + `
+<p style="margin:0 0 12px;font-size:13px">Предлагаем профессиональные услуги по подбору и оформлению иностранных специалистов из <strong>${country}</strong>. Подбор персонала — <strong>бесплатно</strong>. Авиабилеты, консульский сбор, медицина за рубежом — за счёт Авагар. ${flag}</p>
+
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Разовые расходы на оформление — ${n} чел.</h3>
+${razTable}
+${note_rass}
+
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Ежемесячные затраты на персонал</h3>
+${fotTable}
+<p style="margin:8px 0;padding:10px;background:#FFF4E0;border-left:4px solid #B07B10;font-size:12.5px">⚠ Первые 6 месяцев НДФЛ 30% (нерезиденты) — на руки ${kpFmt(ruki30)}. С 7-го месяца — 13% — на руки ${kpFmt(ruki13)}. Затраты работодателя одинаковы в оба периода.</p>
+${extraTable}
+
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">На заказчике</h3>
+<p style="margin:0;font-size:13px">Жильё и питание — организует заказчик. Авагар встречает сотрудников в аэропорту и довозит до места проживания.</p>
+
+<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666">
+  <strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · info@avagar.ru
+</div>`;
+}
+
+function buildKP_Korea(header, tbStyle, thStyle){
+  const n = Math.max(1, val('k-count',10));
+  const usd = val('k-usd',90);
+  const sal = val('k-sal',120000);
+  const hasTrans = chk('k-translator');
+  const hasCook = chk('k-cook');
+  const advance = 1700*usd*n;
+  const centerComm = Math.round(sal*0.087);
+  const crewCount = 1+(hasTrans?1:0)+(hasCook?1:0);
+  const itog1 = sal+centerComm+3500;
+  const itogN = itog1*n+sal*crewCount;
+
+  const advTable = `<table style="${tbStyle}">
+    <thead><tr><th style="${thStyle}">Статья</th><th style="${thStyle};text-align:right">1 чел.</th><th style="${thStyle};text-align:right">${n} чел.</th></tr></thead>
+    <tbody>
+    ${trKP([tdS('Разовая оплата — 1 700 USD/чел. (аванс 100%)'),tdS(' 700 = '+kpFmt(1700*usd),{right:true}),tdS(kpFmt(advance),{right:true})])}
+    ${trKP([tdS('<strong>ИТОГО аванс</strong>'),tdS('',{right:true}),tdS('<strong>'+kpFmt(advance)+'</strong>',{right:true,bold:true,bg:'#FFF5F5'})])}
+    </tbody></table>`;
+
+  const monTable = `<table style="${tbStyle}">
+    <thead><tr><th style="${thStyle}">Статья</th><th style="${thStyle};text-align:right">1 чел.</th><th style="${thStyle};text-align:right">${n} чел.</th></tr></thead>
+    <tbody>
+    ${trKP([tdS('Заработная плата'),tdS(kpFmt(sal),{right:true}),tdS(kpFmt(sal*n),{right:true})])}
+    ${trKP([tdS('Комиссия учебному центру (8,7% от ЗП)'),tdS(kpFmt(centerComm),{right:true}),tdS(kpFmt(centerComm*n),{right:true})])}
+    ${trKP([tdS('Комиссия Авагар'),tdS(kpFmt(3500),{right:true}),tdS(kpFmt(3500*n),{right:true})])}
+    ${trKP([tdS('Бригадир'+(hasTrans?' + Переводчик':'')+(hasCook?' + Повар':'')+' (${crewCount} чел.)'),tdS(kpFmt(sal)+'/чел.',{right:true}),tdS(kpFmt(sal*crewCount),{right:true})])}
+    ${trKP([tdS('<strong>ИТОГО/мес.</strong>'),tdS('<strong>'+kpFmt(itog1)+'</strong>',{right:true,bold:true,bg:'#FFF5F5'}),tdS('<strong>'+kpFmt(itogN)+'</strong>',{right:true,bold:true,bg:'#FFF5F5'})])}
+    </tbody></table>`;
+
+  return header + `
+<p style="margin:0 0 12px">Предлагаем персонал из КНДР по схеме производственной практики. Квоты и разрешения на работу не требуются. Срок готовности: <strong>1,5–3 месяца</strong>. 🇰🇵</p>
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Разовая оплата (аванс)</h3>
+${advTable}
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Ежемесячные расходы</h3>
+${monTable}
+<p style="margin:8px 0;padding:10px;background:#FFF5F5;border-left:4px solid #CC0000;font-size:12.5px">⚠ Проживание — только общежитие (бытовки недопустимы). Питание — на заказчике. Бригадир обязателен при любом количестве.</p>
+<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77</div>`;
+}
+
+function buildKP_Autstaffing(header, tbStyle, thStyle){
+  const n = Math.max(1, val('a-count',5));
+  const oklad = val('a-oklad',27093);
+  const regNeeded = chk('a-reg');
+  const hasPatent = chk('a-patent');
+  const hasCert = chk('a-cert');
+  const hasDakto = chk('a-dakto');
+
+  let komissia;
+  if(n<=5) komissia=6000;
+  else if(n<=10) komissia=5000;
+  else if(n<=30) komissia=4500;
+  else komissia=4000;
+
+  const ndfl=Math.round(oklad*0.13), naRuki=oklad-ndfl;
+  const sv=Math.round(oklad*0.30), ns=Math.round(oklad*0.002);
+  const base1=oklad+sv+ns+komissia, nds1=Math.round(base1*0.22);
+  const itog1=base1+nds1, itogN=itog1*n+(regNeeded?7000*n:0);
+
+  const monTable = `<table style="${tbStyle}">
+    <thead><tr><th style="${thStyle};width:55%">Статья</th><th style="${thStyle};text-align:right">1 чел.</th><th style="${thStyle};text-align:right">${n} чел.</th></tr></thead>
+    <tbody>
+    ${trKP([tdS('Оклад (gross)'),tdS(kpFmt(oklad),{right:true}),tdS(kpFmt(oklad*n),{right:true})])}
+    ${trKP([tdS('НДФЛ (13%)'),tdS(kpFmt(ndfl),{right:true}),tdS(kpFmt(ndfl*n),{right:true})])}
+    ${trKP([tdS('<span style="color:#2A7D4F;font-weight:600">На руки сотруднику</span>'),tdS('<span style="color:#2A7D4F">'+kpFmt(naRuki)+'</span>',{right:true}),tdS('<span style="color:#2A7D4F">'+kpFmt(naRuki*n)+'</span>',{right:true})])}
+    ${trKP([tdS('Страховые взносы (30%)'),tdS(kpFmt(sv),{right:true}),tdS(kpFmt(sv*n),{right:true})])}
+    ${trKP([tdS('Взносы по НС (0,2% — базовый тариф)'),tdS(kpFmt(ns),{right:true}),tdS(kpFmt(ns*n),{right:true})])}
+    ${trKP([tdS('Комиссия Авагар ('+kpFmt(komissia)+'/чел./мес.)'),tdS(kpFmt(komissia),{right:true}),tdS(kpFmt(komissia*n),{right:true})])}
+    ${trKP([tdS('НДС 22%'),tdS(kpFmt(nds1),{right:true}),tdS(kpFmt(nds1*n),{right:true})])}
+    ${regNeeded?trKP([tdS('Миграционный учёт (7 000 ₽/чел.)'),tdS(kpFmt(7000),{right:true}),tdS(kpFmt(7000*n),{right:true})]):''}
+    ${trKP([tdS('<strong>ИТОГО в месяц (с НДС 22%)</strong>'),tdS('<strong>'+kpFmt(itog1)+'</strong>',{right:true,bold:true,bg:'#EDF7F1'}),tdS('<strong>'+kpFmt(itogN)+'</strong>',{right:true,bold:true,bg:'#EDF7F1'})])}
+    </tbody></table>`;
+
+  let razRows = '';
+  if(hasPatent) razRows += trKP([tdS('Оформление патента'),tdS('нал: 47 000 ₽ / безнал: 50 500 ₽',{right:true}),tdS('нал: '+kpFmt(47000*n),{right:true})]);
+  if(hasCert) razRows += trKP([tdS('Сертификат русского языка'),tdS(kpFmt(4000),{right:true}),tdS(kpFmt(4000*n),{right:true})]);
+  if(hasDakto) razRows += trKP([tdS('Дактилоскопия + фотографирование'),tdS('до 2 000 ₽',{right:true}),tdS('до '+kpFmt(2000*n),{right:true})]);
+  const razBlock = razRows ? `<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Разовые расходы</h3>
+  <table style="${tbStyle}"><thead><tr><th style="${thStyle};width:55%">Услуга</th><th style="${thStyle};text-align:right">1 чел.</th><th style="${thStyle};text-align:right">${n} чел.</th></tr></thead><tbody>${razRows}</tbody></table>` : '';
+
+  return header + `
+<p style="margin:0 0 12px">Услуга вывода иностранных сотрудников за штат. Авагар становится официальным работодателем: ТД, зарплата, миграционный контроль. Безвизовые иностранные граждане: Узбекистан, Таджикистан, ЕАЭС.</p>
+<h3 style="font-size:14px;font-weight:bold;margin:18px 0 8px;border-bottom:2px solid #1A3A6B;padding-bottom:4px">Ежемесячный платёж (${n} сотр., оклад ${kpFmt(oklad)})</h3>
+${monTable}
+${razBlock}
+<p style="margin:8px 0;padding:10px;background:#EEF3FB;border-left:4px solid #1A3A6B;font-size:12.5px">Комиссия начисляется по фактически оформленным. Ставка для ${n} чел.: ${kpFmt(komissia)}/чел./мес.${regNeeded?' Миграционный учёт — только при наличии собственности заказчика, переданной Авагар по договору аренды.':''}</p>
+<div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77</div>`;
+}
+
+// ===== SUPABASE SYNC =====
+const SB_URL = 'https://xasjdyeapmyzsbzqnstb.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhc2pkeWVhcG15enNienFuc3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQxNzcsImV4cCI6MjA5MTgyMDE3N30.VFbBkgNOdIV9o_1giYBoHwpx23mRBCNlxukpDUUt58o';
+const EDIT_SELECTOR = '#home p, #home li, #home h2, #home h3, #vizovye p, #vizovye li, #vizovye h2, #vizovye td, #vizovye th, #korea p, #korea li, #korea h2, #korea td, #korea th, #autstaffing p, #autstaffing li, #autstaffing h2, #autstaffing td, #autstaffing th, #sudy p, #sudy li, #sudy h2, #sudy td, #sudy th, #kto p, #kto li, #kto h2, #road .rtitle, #road .rdesc';
+let editMode = false;
+let saveTimer = null;
+
+async function sbGet(key){
+  const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key)+'&select=content', {
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  const d = await r.json();
+  return d && d[0] ? d[0].content : null;
+}
+
+async function sbSet(key, content){
+  await fetch(SB_URL+'/rest/v1/avagar_edits', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer '+SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({key, content, updated_at: new Date().toISOString()})
+  });
+}
+
+async function sbGetAll(){
+  const r = await fetch(SB_URL+'/rest/v1/avagar_edits?select=key,content', {
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  return await r.json();
+}
+
+function assignEditKeys(){
+  document.querySelectorAll(EDIT_SELECTOR).forEach((el, i) => {
+    if(!el.dataset.editKey) el.dataset.editKey = 'edit_' + i;
+  });
+}
+
+async function loadEdits(){
+  assignEditKeys();
+  try {
+    const all = await sbGetAll();
+    if(!all || !all.length) return;
+    const map = {};
+    all.forEach(r => map[r.key] = r.content);
+    document.querySelectorAll(EDIT_SELECTOR).forEach(el => {
+      const saved = map[el.dataset.editKey];
+      if(saved !== undefined) el.innerHTML = saved;
+    });
+  } catch(e) { console.log('Supabase load error', e); }
+}
+
+function scheduleSave(el){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    sbSet(el.dataset.editKey, el.innerHTML);
+  }, 800);
+}
+
+function toggleEditMode(){
+  editMode = !editMode;
+  const btn = document.getElementById('edit-toggle');
+  const els = document.querySelectorAll(EDIT_SELECTOR);
+  const resetBtn = document.getElementById('reset-edits-btn');
+
+  if(editMode){
+    assignEditKeys();
+    els.forEach(el => {
+      el.contentEditable = 'true';
+      el.addEventListener('focus', onFocusEdit);
+      el.addEventListener('blur', onBlurEdit);
+      el.addEventListener('input', e => scheduleSave(e.target));
+    });
+    document.body.classList.add('edit-mode');
+    btn.style.background = 'rgba(42,125,79,.25)';
+    btn.style.borderColor = 'rgba(42,125,79,.5)';
+    btn.style.color = '#5BC98A';
+    btn.innerHTML = '✅ Редактирование вкл.';
+    if(resetBtn) resetBtn.style.display = 'block';
+  } else {
+    els.forEach(el => {
+      el.contentEditable = 'false';
+      el.style.background = '';
+      el.style.boxShadow = '';
+      el.removeEventListener('focus', onFocusEdit);
+      el.removeEventListener('blur', onBlurEdit);
+    });
+    document.body.classList.remove('edit-mode');
+    btn.style.background = 'rgba(232,184,75,.12)';
+    btn.style.borderColor = 'rgba(232,184,75,.25)';
+    btn.style.color = '#E8B84B';
+    btn.innerHTML = '✏️ Режим редактирования';
+    if(resetBtn) resetBtn.style.display = 'none';
+  }
+}
+
+async function resetEdits(){
+  if(!confirm('Сбросить все правки и вернуть исходный текст?')) return;
+  const all = await sbGetAll();
+  for(const r of all){
+    await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(r.key), {
+      method: 'DELETE',
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+    });
+  }
+  location.reload();
+}
+
+function onFocusEdit(e){
+  e.target.style.background = 'rgba(232,184,75,.13)';
+  e.target.style.boxShadow = '0 0 0 2px rgba(232,184,75,.35)';
+}
+function onBlurEdit(e){
+  e.target.style.background = '';
+  e.target.style.boxShadow = '';
+  sbSet(e.target.dataset.editKey, e.target.innerHTML);
+}
+
+window.addEventListener('DOMContentLoaded', loadEdits);
+
+calc();
+</script>
+</body>
+</html>
