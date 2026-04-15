@@ -1680,7 +1680,7 @@ function buildKP_Korea(header, tbStyle, thStyle, email){
     ${trKP([tdS('Заработная плата'),tdS(kpFmt(sal),{right:true}),tdS(kpFmt(sal*n),{right:true})])}
     ${trKP([tdS('Комиссия учебному центру (8,7% от ЗП)'),tdS(kpFmt(centerComm),{right:true}),tdS(kpFmt(centerComm*n),{right:true})])}
     ${trKP([tdS('Комиссия Авагар'),tdS(kpFmt(3500),{right:true}),tdS(kpFmt(3500*n),{right:true})])}
-    ${trKP([tdS('Бригадир'+(hasTrans?' + Переводчик':'')+(hasCook?' + Повар':'')+' (${crewCount} чел.)'),tdS(kpFmt(sal)+'/чел.',{right:true}),tdS(kpFmt(sal*crewCount),{right:true})])}
+    ${trKP([tdS('Бригадир'+(hasTrans?' + Переводчик':'')+(hasCook?' + Повар':'')+' ('+crewCount+' чел.)'),tdS(kpFmt(sal)+'/чел.',{right:true}),tdS(kpFmt(sal*crewCount),{right:true})])}
     ${trKP([tdS('<strong>ИТОГО/мес.</strong>'),tdS('<strong>'+kpFmt(itog1)+'</strong>',{right:true,bold:true,bg:'#FFF5F5'}),tdS('<strong>'+kpFmt(itogN)+'</strong>',{right:true,bold:true,bg:'#FFF5F5'})])}
     </tbody></table>`;
 
