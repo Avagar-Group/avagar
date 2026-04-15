@@ -1514,15 +1514,15 @@ ${client ? '<p style="margin:0 0 14px;font-size:13px">Компания: <strong>
 </table>`;
 
   if(svc === 'vizovye' || svc === 'india'){
-    return buildKP_Vizovye(header, tbStyle, thStyle, svc);
+    return buildKP_Vizovye(header, tbStyle, thStyle, svc, email);
   } else if(svc === 'korea'){
-    return buildKP_Korea(header, tbStyle, thStyle);
+    return buildKP_Korea(header, tbStyle, thStyle, email);
   } else {
-    return buildKP_Autstaffing(header, tbStyle, thStyle);
+    return buildKP_Autstaffing(header, tbStyle, thStyle, email);
   }
 }
 
-function buildKP_Vizovye(header, tbStyle, thStyle, svc){
+function buildKP_Vizovye(header, tbStyle, thStyle, svc, email){
   const n = Math.max(1, val(svc==='vizovye'?'v-count':'i-count', 5));
   const oklad = Math.max(30000, val(svc==='vizovye'?'v-oklad':'i-oklad', 80500));
   const country = svc==='vizovye' ? 'Бангладеш' : 'Индии';
@@ -1631,7 +1631,7 @@ ${extraTable}
 </div>`;
 }
 
-function buildKP_Korea(header, tbStyle, thStyle){
+function buildKP_Korea(header, tbStyle, thStyle, email){
   const n = Math.max(1, val('k-count',10));
   const usd = val('k-usd',90);
   const sal = val('k-sal',120000);
@@ -1670,7 +1670,7 @@ ${monTable}
 <div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · ${email} · avagar.ru</div>`;
 }
 
-function buildKP_Autstaffing(header, tbStyle, thStyle){
+function buildKP_Autstaffing(header, tbStyle, thStyle, email){
   const n = Math.max(1, val('a-count',5));
   const oklad = val('a-oklad',27093);
   const regNeeded = chk('a-reg');
