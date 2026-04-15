@@ -189,6 +189,12 @@ table.dt strong{color:var(--ink)}
   <div class="sb-group"><div class="sb-label">Инструменты</div>
     <div class="sb-item" onclick="show('calc')" style="background:rgba(232,184,75,.12);border-left-color:#E8B84B"><span class="dot" style="background:#E8B84B"></span>🧮 Калькулятор КП</div>
   </div>
+  <div style="padding:10px 22px 4px">
+    <button id="edit-toggle" onclick="toggleEditMode()" style="width:100%;background:rgba(232,184,75,.12);border:1px solid rgba(232,184,75,.25);color:#E8B84B;border-radius:6px;padding:9px 12px;font-family:'Golos Text',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s">✏️ Режим редактирования</button>
+  </div>
+  <div style="padding:0 22px 10px;display:none" id="reset-edits-btn">
+    <button onclick="resetEdits()" style="width:100%;background:rgba(214,74,42,.1);border:1px solid rgba(214,74,42,.25);color:#D64A2A;border-radius:6px;padding:7px 12px;font-family:'Golos Text',sans-serif;font-size:11px;font-weight:600;cursor:pointer">↺ Сбросить все правки</button>
+  </div>
   <div class="sb-foot">Авагар Групп · с 2009<br>Аккредитация № ЕПГУ-2801548798</div>
 </nav>
 
@@ -770,6 +776,8 @@ table.dt strong{color:var(--ink)}
 
 </main>
 <style>
+/* ===== EDIT MODE ===== */
+body.edit-mode [contenteditable=true]:hover{background:rgba(232,184,75,.08)!important;cursor:text}
 /* ===== CALCULATOR ===== */
 .c-service-wrap{margin-bottom:24px}
 .c-service-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:0}
@@ -1590,6 +1598,129 @@ ${razBlock}
 <p style="margin:8px 0;padding:10px;background:#EEF3FB;border-left:4px solid #1A3A6B;font-size:12.5px">Комиссия начисляется по фактически оформленным. Ставка для ${n} чел.: ${kpFmt(komissia)}/чел./мес.${regNeeded?' Миграционный учёт — только при наличии собственности заказчика, переданной Авагар по договору аренды.':''}</p>
 <div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77</div>`;
 }
+
+// ===== SUPABASE SYNC =====
+const SB_URL = 'https://xasjdyeapmyzsbzqnstb.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhc2pkeWVhcG15enNienFuc3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQxNzcsImV4cCI6MjA5MTgyMDE3N30.VFbBkgNOdIV9o_1giYBoHwpx23mRBCNlxukpDUUt58o';
+const EDIT_SELECTOR = '#home p, #home li, #home h2, #home h3, #vizovye p, #vizovye li, #vizovye h2, #vizovye td, #vizovye th, #korea p, #korea li, #korea h2, #korea td, #korea th, #autstaffing p, #autstaffing li, #autstaffing h2, #autstaffing td, #autstaffing th, #sudy p, #sudy li, #sudy h2, #sudy td, #sudy th, #kto p, #kto li, #kto h2, #road .rtitle, #road .rdesc';
+let editMode = false;
+let saveTimer = null;
+
+async function sbGet(key){
+  const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key)+'&select=content', {
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  const d = await r.json();
+  return d && d[0] ? d[0].content : null;
+}
+
+async function sbSet(key, content){
+  await fetch(SB_URL+'/rest/v1/avagar_edits', {
+    method: 'POST',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer '+SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({key, content, updated_at: new Date().toISOString()})
+  });
+}
+
+async function sbGetAll(){
+  const r = await fetch(SB_URL+'/rest/v1/avagar_edits?select=key,content', {
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  return await r.json();
+}
+
+function assignEditKeys(){
+  document.querySelectorAll(EDIT_SELECTOR).forEach((el, i) => {
+    if(!el.dataset.editKey) el.dataset.editKey = 'edit_' + i;
+  });
+}
+
+async function loadEdits(){
+  assignEditKeys();
+  try {
+    const all = await sbGetAll();
+    if(!all || !all.length) return;
+    const map = {};
+    all.forEach(r => map[r.key] = r.content);
+    document.querySelectorAll(EDIT_SELECTOR).forEach(el => {
+      const saved = map[el.dataset.editKey];
+      if(saved !== undefined) el.innerHTML = saved;
+    });
+  } catch(e) { console.log('Supabase load error', e); }
+}
+
+function scheduleSave(el){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    sbSet(el.dataset.editKey, el.innerHTML);
+  }, 800);
+}
+
+function toggleEditMode(){
+  editMode = !editMode;
+  const btn = document.getElementById('edit-toggle');
+  const els = document.querySelectorAll(EDIT_SELECTOR);
+  const resetBtn = document.getElementById('reset-edits-btn');
+
+  if(editMode){
+    assignEditKeys();
+    els.forEach(el => {
+      el.contentEditable = 'true';
+      el.addEventListener('focus', onFocusEdit);
+      el.addEventListener('blur', onBlurEdit);
+      el.addEventListener('input', e => scheduleSave(e.target));
+    });
+    document.body.classList.add('edit-mode');
+    btn.style.background = 'rgba(42,125,79,.25)';
+    btn.style.borderColor = 'rgba(42,125,79,.5)';
+    btn.style.color = '#5BC98A';
+    btn.innerHTML = '✅ Редактирование вкл.';
+    if(resetBtn) resetBtn.style.display = 'block';
+  } else {
+    els.forEach(el => {
+      el.contentEditable = 'false';
+      el.style.background = '';
+      el.style.boxShadow = '';
+      el.removeEventListener('focus', onFocusEdit);
+      el.removeEventListener('blur', onBlurEdit);
+    });
+    document.body.classList.remove('edit-mode');
+    btn.style.background = 'rgba(232,184,75,.12)';
+    btn.style.borderColor = 'rgba(232,184,75,.25)';
+    btn.style.color = '#E8B84B';
+    btn.innerHTML = '✏️ Режим редактирования';
+    if(resetBtn) resetBtn.style.display = 'none';
+  }
+}
+
+async function resetEdits(){
+  if(!confirm('Сбросить все правки и вернуть исходный текст?')) return;
+  const all = await sbGetAll();
+  for(const r of all){
+    await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(r.key), {
+      method: 'DELETE',
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+    });
+  }
+  location.reload();
+}
+
+function onFocusEdit(e){
+  e.target.style.background = 'rgba(232,184,75,.13)';
+  e.target.style.boxShadow = '0 0 0 2px rgba(232,184,75,.35)';
+}
+function onBlurEdit(e){
+  e.target.style.background = '';
+  e.target.style.boxShadow = '';
+  sbSet(e.target.dataset.editKey, e.target.innerHTML);
+}
+
+window.addEventListener('DOMContentLoaded', loadEdits);
 
 calc();
 </script>
