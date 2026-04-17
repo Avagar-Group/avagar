@@ -1798,92 +1798,6 @@ ${razBlock}
 <div style="margin-top:28px;border-top:1px solid #ddd;padding-top:14px;font-size:12px;color:#666"><strong>ЧАЗ АВАГАР ГРУПП</strong> · Аккредитация № ЕПГУ-2801548798 · тел. 8(804)700-29-77 · ${email} · avagar.ru</div>`;
 }
 
-// ===== FAQ =====
-let faqEditId = null;
-const FAQ_PREFIX = 'faq_';
-
-async function loadFaq(){
-  const list = document.getElementById('faq-list');
-  if(!list) return;
-  try {
-    const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=like.faq%25&select=key,content&order=updated_at.asc', {
-      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
-    });
-    const rows = await r.json();
-    if(!rows || !rows.length){
-      list.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:20px 0">Вопросов пока нет. Нажмите «+ Добавить вопрос».</div>';
-      return;
-    }
-    list.innerHTML = rows.map(row => {
-      let item;
-      try { item = JSON.parse(row.content); } catch(e){ return ''; }
-      return `<div class="faq-item" id="fi-${row.key}">
-        <div class="faq-q" onclick="toggleFaq('fi-${row.key}')">
-          <div class="faq-q-text">${item.q}</div>
-          <div class="faq-arrow">▾</div>
-        </div>
-        <div class="faq-a">
-          <div>${item.a}</div>
-          <div class="faq-actions">
-            <button class="faq-btn faq-btn-edit" onclick="editFaq('${row.key}','${encodeURIComponent(item.q)}','${encodeURIComponent(item.a)}')">✏️ Редактировать</button>
-            <button class="faq-btn faq-btn-del" onclick="deleteFaq('${row.key}')">🗑 Удалить</button>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-  } catch(e) {
-    list.innerHTML = '<div style="color:var(--accent);font-size:14px">Ошибка загрузки</div>';
-  }
-}
-
-function toggleFaq(id){
-  document.getElementById(id).classList.toggle('open');
-}
-
-function openFaqModal(){ 
-  faqEditId = null;
-  document.getElementById('faq-q').value = '';
-  document.getElementById('faq-a').value = '';
-  document.getElementById('faq-modal-title').textContent = 'Новый вопрос';
-  document.getElementById('faq-modal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeFaqModal(){
-  document.getElementById('faq-modal').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function editFaq(key, q, a){
-  faqEditId = key;
-  document.getElementById('faq-q').value = decodeURIComponent(q);
-  document.getElementById('faq-a').value = decodeURIComponent(a);
-  document.getElementById('faq-modal-title').textContent = 'Редактировать вопрос';
-  document.getElementById('faq-modal').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-async function saveFaq(){
-  const q = document.getElementById('faq-q').value.trim();
-  const a = document.getElementById('faq-a').value.trim();
-  if(!q || !a) return alert('Заполните вопрос и ответ');
-  const key = faqEditId || (FAQ_PREFIX + Date.now());
-  await sbSet(key, JSON.stringify({q, a}));
-  closeFaqModal();
-  await loadFaq();
-}
-
-async function deleteFaq(key){
-  if(!confirm('Удалить этот вопрос?')) return;
-  await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key), {
-    method: 'DELETE',
-    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
-  });
-  await loadFaq();
-}
-
-// FAQ loads when tab opens (handled in show() below)
-
 // ===== SUPABASE SYNC =====
 const SB_URL = 'https://xasjdyeapmyzsbzqnstb.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhc2pkeWVhcG15enNienFuc3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQxNzcsImV4cCI6MjA5MTgyMDE3N30.VFbBkgNOdIV9o_1giYBoHwpx23mRBCNlxukpDUUt58o';
@@ -2006,6 +1920,92 @@ function onBlurEdit(e){
 }
 
 window.addEventListener('DOMContentLoaded', loadEdits);
+
+// ===== FAQ =====
+let faqEditId = null;
+const FAQ_PREFIX = 'faq_';
+
+async function loadFaq(){
+  const list = document.getElementById('faq-list');
+  if(!list) return;
+  try {
+    const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=like.faq%25&select=key,content&order=updated_at.asc', {
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+    });
+    const rows = await r.json();
+    if(!rows || !rows.length){
+      list.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:20px 0">Вопросов пока нет. Нажмите «+ Добавить вопрос».</div>';
+      return;
+    }
+    list.innerHTML = rows.map(row => {
+      let item;
+      try { item = JSON.parse(row.content); } catch(e){ return ''; }
+      return `<div class="faq-item" id="fi-${row.key}">
+        <div class="faq-q" onclick="toggleFaq('fi-${row.key}')">
+          <div class="faq-q-text">${item.q}</div>
+          <div class="faq-arrow">▾</div>
+        </div>
+        <div class="faq-a">
+          <div>${item.a}</div>
+          <div class="faq-actions">
+            <button class="faq-btn faq-btn-edit" onclick="editFaq('${row.key}','${encodeURIComponent(item.q)}','${encodeURIComponent(item.a)}')">✏️ Редактировать</button>
+            <button class="faq-btn faq-btn-del" onclick="deleteFaq('${row.key}')">🗑 Удалить</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="color:var(--accent);font-size:14px">Ошибка загрузки</div>';
+  }
+}
+
+function toggleFaq(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+function openFaqModal(){ 
+  faqEditId = null;
+  document.getElementById('faq-q').value = '';
+  document.getElementById('faq-a').value = '';
+  document.getElementById('faq-modal-title').textContent = 'Новый вопрос';
+  document.getElementById('faq-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFaqModal(){
+  document.getElementById('faq-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function editFaq(key, q, a){
+  faqEditId = key;
+  document.getElementById('faq-q').value = decodeURIComponent(q);
+  document.getElementById('faq-a').value = decodeURIComponent(a);
+  document.getElementById('faq-modal-title').textContent = 'Редактировать вопрос';
+  document.getElementById('faq-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+async function saveFaq(){
+  const q = document.getElementById('faq-q').value.trim();
+  const a = document.getElementById('faq-a').value.trim();
+  if(!q || !a) return alert('Заполните вопрос и ответ');
+  const key = faqEditId || (FAQ_PREFIX + Date.now());
+  await sbSet(key, JSON.stringify({q, a}));
+  closeFaqModal();
+  await loadFaq();
+}
+
+async function deleteFaq(key){
+  if(!confirm('Удалить этот вопрос?')) return;
+  await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key), {
+    method: 'DELETE',
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  await loadFaq();
+}
+
+// FAQ loads when tab opens (handled in show() below)
 
 calc();
 </script>
