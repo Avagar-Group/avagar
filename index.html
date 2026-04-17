@@ -1937,19 +1937,23 @@ async function loadFaq(){
       list.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:20px 0">Вопросов пока нет. Нажмите «+ Добавить вопрос».</div>';
       return;
     }
+    // Store FAQ data for edit/delete by index
+    window._faqData = {};
     list.innerHTML = rows.map(row => {
       let item;
       try { item = JSON.parse(row.content); } catch(e){ return ''; }
-      return `<div class="faq-item" id="fi-${row.key}">
-        <div class="faq-q" onclick="toggleFaq('fi-${row.key}')">
+      window._faqData[row.key] = item;
+      const safeKey = row.key.replace(/[^a-z0-9_]/gi, '_');
+      return `<div class="faq-item" id="fi-${safeKey}">
+        <div class="faq-q" onclick="toggleFaq('fi-${safeKey}')">
           <div class="faq-q-text">${item.q}</div>
           <div class="faq-arrow">▾</div>
         </div>
         <div class="faq-a">
-          <div>${item.a}</div>
+          <div style="white-space:pre-wrap">${item.a}</div>
           <div class="faq-actions">
-            <button class="faq-btn faq-btn-edit" onclick="editFaq('${row.key}','${encodeURIComponent(item.q)}','${encodeURIComponent(item.a)}')">✏️ Редактировать</button>
-            <button class="faq-btn faq-btn-del" onclick="deleteFaq('${row.key}')">🗑 Удалить</button>
+            <button class="faq-btn faq-btn-edit" data-key="${row.key}" onclick="editFaqByKey(this.dataset.key)">✏️ Редактировать</button>
+            <button class="faq-btn faq-btn-del" data-key="${row.key}" onclick="deleteFaqByKey(this.dataset.key)">🗑 Удалить</button>
           </div>
         </div>
       </div>`;
@@ -1984,6 +1988,26 @@ function editFaq(key, q, a){
   document.getElementById('faq-modal-title').textContent = 'Редактировать вопрос';
   document.getElementById('faq-modal').style.display = 'block';
   document.body.style.overflow = 'hidden';
+}
+
+function editFaqByKey(key){
+  const item = window._faqData && window._faqData[key];
+  if(!item) return;
+  faqEditId = key;
+  document.getElementById('faq-q').value = item.q;
+  document.getElementById('faq-a').value = item.a;
+  document.getElementById('faq-modal-title').textContent = 'Редактировать вопрос';
+  document.getElementById('faq-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+async function deleteFaqByKey(key){
+  if(!confirm('Удалить этот вопрос?')) return;
+  await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key), {
+    method: 'DELETE',
+    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
+  });
+  await loadFaq();
 }
 
 async function saveFaq(){
