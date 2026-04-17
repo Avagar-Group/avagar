@@ -790,7 +790,7 @@ table.dt strong{color:var(--ink)}
   <div class="ph">
     <span class="badge b-dk">Справочник</span>
     <div class="pt">Вопрос / Ответ</div>
-    <div class="pd">Часто задаваемые вопросы. Добавляйте — ответы увидят все.</div>
+
   </div>
 
   <button onclick="openFaqModal()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:11px 22px;font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;cursor:pointer;margin-bottom:24px">+ Добавить вопрос</button>
@@ -1008,6 +1008,7 @@ function show(id){
   if(lbl) lbl.textContent = sectionLabels[id] || '';
   window.scrollTo(0,0);
   if(window.innerWidth <= 800) closeSidebar();
+  if(id === 'faq') loadFaq();
 }
 
 function rmTab(el,id){
@@ -1805,7 +1806,7 @@ async function loadFaq(){
   const list = document.getElementById('faq-list');
   if(!list) return;
   try {
-    const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=like.faq_%&select=key,content&order=updated_at.asc', {
+    const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=like.faq%25&select=key,content&order=updated_at.asc', {
       headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
     });
     const rows = await r.json();
@@ -1881,12 +1882,7 @@ async function deleteFaq(key){
   await loadFaq();
 }
 
-// Load FAQ when tab opens
-const _origShow = show;
-function show(id){
-  _origShow(id);
-  if(id === 'faq') loadFaq();
-}
+// FAQ loads when tab opens (handled in show() below)
 
 // ===== SUPABASE SYNC =====
 const SB_URL = 'https://xasjdyeapmyzsbzqnstb.supabase.co';
