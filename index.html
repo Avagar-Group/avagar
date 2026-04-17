@@ -2003,11 +2003,20 @@ function editFaqByKey(key){
 
 async function deleteFaqByKey(key){
   if(!confirm('Удалить этот вопрос?')) return;
-  await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key), {
-    method: 'DELETE',
-    headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY}
-  });
-  await loadFaq();
+  try {
+    const r = await fetch(SB_URL+'/rest/v1/avagar_edits?key=eq.'+encodeURIComponent(key), {
+      method: 'DELETE',
+      headers: {'apikey': SB_KEY, 'Authorization': 'Bearer '+SB_KEY, 'Content-Type': 'application/json'}
+    });
+    if(!r.ok){
+      const err = await r.text();
+      alert('Ошибка удаления: ' + r.status + ' ' + err);
+      return;
+    }
+    await loadFaq();
+  } catch(e) {
+    alert('Ошибка: ' + e.message);
+  }
 }
 
 async function saveFaq(){
