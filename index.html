@@ -5,6 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>АВАГАР — База знаний</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- AUTH GUARD -->
+<script>
+(function(){
+  const SB_URL_AUTH = 'https://xasjdyeapmyzsbzqnstb.supabase.co';
+  const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhc2pkeWVhcG15enNienFuc3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQxNzcsImV4cCI6MjA5MTgyMDE3N30.VFbBkgNOdIV9o_1giYBoHwpx23mRBCNlxukpDUUt58o';
+  const SESSION_KEY = '_avagar_base_session';
+
+  function getSession(){
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e){ return null; }
+  }
+  function setSession(s){
+    if(s) localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    else localStorage.removeItem(SESSION_KEY);
+  }
+
+  // Перехватываем fetch: ко всем запросам к Supabase /rest/ подмешиваем токен пользователя
+  const origFetch = window.fetch;
+  window.fetch = function(url, opts){
+    opts = opts || {};
+    const urlStr = typeof url === 'string' ? url : (url && url.url) || '';
+    if(urlStr.indexOf(SB_URL_AUTH + '/rest/') === 0){
+      const s = getSession();
+      if(s && s.access_token){
+        opts.headers = Object.assign({}, opts.headers || {}, {
+          'apikey': SB_ANON,
+          'Authorization': 'Bearer ' + s.access_token
+        });
+      }
+    }
+    return origFetch.call(this, url, opts);
+  };
+
+  async function signIn(email, password){
+    const r = await origFetch(SB_URL_AUTH + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: {'apikey': SB_ANON, 'Content-Type': 'application/json'},
+      body: JSON.stringify({email, password})
+    });
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.error_description || data.msg || 'Ошибка входа');
+    setSession(data);
+    return data;
+  }
+
+  async function signOut(){
+    const s = getSession();
+    if(s && s.access_token){
+      try {
+        await origFetch(SB_URL_AUTH + '/auth/v1/logout', {
+          method: 'POST',
+          headers: {'apikey': SB_ANON, 'Authorization': 'Bearer ' + s.access_token}
+        });
+      } catch(e){}
+    }
+    setSession(null);
+    location.reload();
+  }
+
+  window.avagarSignOut = signOut;
+
+  function renderLogin(errMsg){
+    document.body.innerHTML = '';
+    document.body.style.cssText = 'margin:0;padding:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F7F5F0;font-family:\'Golos Text\',-apple-system,sans-serif;';
+    const box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border:1px solid #DDD8CE;border-radius:12px;padding:40px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.06);margin:20px;';
+    box.innerHTML = ''
+      + '<div style="font-family:\'Unbounded\',sans-serif;font-weight:900;font-size:22px;color:#12243F;">АВАГАР</div>'
+      + '<div style="font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:28px;">База знаний</div>'
+      + '<form id="av-login-form">'
+      + '<label style="display:block;font-size:12px;color:#6B7280;margin-bottom:6px;">Email</label>'
+      + '<input id="av-email" type="email" required autocomplete="username" style="width:100%;padding:11px 13px;border:1px solid #DDD8CE;border-radius:8px;font-size:14px;margin-bottom:14px;box-sizing:border-box;font-family:inherit;">'
+      + '<label style="display:block;font-size:12px;color:#6B7280;margin-bottom:6px;">Пароль</label>'
+      + '<input id="av-password" type="password" required autocomplete="current-password" style="width:100%;padding:11px 13px;border:1px solid #DDD8CE;border-radius:8px;font-size:14px;margin-bottom:18px;box-sizing:border-box;font-family:inherit;">'
+      + '<div id="av-err" style="color:#D64A2A;font-size:12px;margin-bottom:10px;min-height:16px;">' + (errMsg || '') + '</div>'
+      + '<button id="av-btn" type="submit" style="width:100%;padding:12px;background:#12243F;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Войти</button>'
+      + '</form>';
+    document.body.appendChild(box);
+    document.getElementById('av-login-form').addEventListener('submit', async function(e){
+      e.preventDefault();
+      const btn = document.getElementById('av-btn');
+      const err = document.getElementById('av-err');
+      btn.disabled = true; btn.textContent = 'Вход...'; err.textContent = '';
+      try {
+        await signIn(document.getElementById('av-email').value.trim(), document.getElementById('av-password').value);
+        location.reload();
+      } catch(ex){
+        err.textContent = 'Неверный email или пароль';
+        btn.disabled = false; btn.textContent = 'Войти';
+      }
+    });
+  }
+
+  // Проверяем сессию при готовности DOM
+  window.addEventListener('DOMContentLoaded', function(){
+    if(!getSession()){ renderLogin(); return; }
+
+    // Валидируем токен тихим запросом; если 401 — разлогинить
+    origFetch(SB_URL_AUTH + '/rest/v1/avagar_edits?select=key&limit=1', {
+      headers: {'apikey': SB_ANON, 'Authorization': 'Bearer ' + getSession().access_token}
+    }).then(function(r){
+      if(r.status === 401){ setSession(null); location.reload(); }
+    }).catch(function(){});
+
+    // Кнопка выхода
+    const logoutBtn = document.createElement('button');
+    logoutBtn.textContent = 'Выйти';
+    logoutBtn.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:9999;padding:8px 16px;background:rgba(18,36,63,.9);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:\'Golos Text\',sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.15);';
+    logoutBtn.onclick = function(){ if(confirm('Выйти?')) window.avagarSignOut(); };
+    document.body.appendChild(logoutBtn);
+  });
+})();
+</script>
 <style>
 :root {
   --ink:#0D1117; --paper:#F7F5F0; --nav:#12243F;
